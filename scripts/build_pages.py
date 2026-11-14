@@ -63,6 +63,9 @@ th { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacin
 .panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px }
 .panels figure { margin: 0 }
 .panels img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: var(--panel) }
+.overview { margin: 22px 0 0 }
+.overview img { display: block; width: 100%; height: auto; border: 1px solid var(--rule) }
+.overview figcaption { font: 13px/1.5 var(--sans); color: var(--muted); margin-top: 6px }
 .panels figcaption { font: 12.5px/1.4 var(--sans); color: var(--muted); margin-top: 5px }
 @media (max-width: 700px) { .panels { grid-template-columns: minmax(0, 1fr) } }
 """
@@ -150,8 +153,8 @@ def main():
 <br>Layers: {lays} &middot; <a href="../site/#{html.escape(sv['source_id'])}">the sheet in the catalogue</a></p>
 <div class="panels">
 <figure><a href="cards/{sid}-original.jpg"><img loading="lazy" src="cards/{sid}-original.jpg" alt="The {html.escape(sv['title'])} as printed"></a><figcaption>The sheet</figcaption></figure>
-<figure><a href="cards/{sid}-contours.jpg"><img loading="lazy" src="cards/{sid}-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines over today's ground</figcaption></figure>
-<figure><a href="cards/{sid}-model.jpg"><img loading="lazy" src="cards/{sid}-model.jpg" alt="Reconstructed surface in perspective"></a><figcaption>The ground it reconstructs</figcaption></figure>
+<figure><a href="cards/{sid}-contours.jpg"><img loading="lazy" src="cards/{sid}-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines, coloured by height</figcaption></figure>
+<figure><a href="cards/{sid}-model.jpg"><img loading="lazy" src="cards/{sid}-model.jpg" alt="Reconstructed ground, shaded relief coloured by height"></a><figcaption>The ground they describe</figcaption></figure>
 </div></section>""")
     cards = "".join(cards)
     topo = f"""
@@ -162,12 +165,15 @@ on the sheet and its height on the City of Portland datum, how it was traced, an
 &nbsp; <span class="note">GeoPackage, {GPKG.stat().st_size / 1e6:.1f} MB &middot; EPSG:2913 (Oregon North, feet) &middot;
 {len(layers)} layers + survey index &middot; <a href="https://github.com/anthonyblackham/guilds-lake-archive/blob/main/gis/README.md">README</a>
 &middot; <a href="https://github.com/anthonyblackham/guilds-lake-archive/blob/main/gis/LICENSE">CC BY 4.0</a></span></p>
+<figure class="overview"><a href="overview.jpg"><img src="overview.jpg" alt="Every survey's traced contours, coloured by height, over today's ground, each titled on its own lines"></a>
+<figcaption>Seven surveys, 1896&ndash;1910, on today's ground: every traced line on one height scale over the 2025
+aerial photograph and the lidar bare earth. Each title sits on the part of the map that drawing supplies.</figcaption></figure>
 <h2>The surveys</h2>
 <div class="scroll"><table><thead><tr><th>Survey</th><th>Date</th><th>Interval</th><th>Datum correction</th><th>Features</th></tr></thead>
 <tbody>{''.join(rows)}</tbody></table></div>
-<p class="note">Each survey's title links to its sheet in the catalogue. Below, each survey three ways, in the same
-frame: the sheet as printed, the traced lines coloured by height over today's ground, and the ground they reconstruct,
-seen in perspective from the side it faces, coloured where the survey reconstructs it and grey (today) around it.</p>
+<p class="note">Each survey's title links to its sheet in the catalogue. Below, each survey three ways, all in the
+sheet's own frame and orientation: the sheet as printed, the traced lines coloured by height, and the ground they
+describe as shaded relief in the same colours. Click any panel for the full-size image.</p>
 {cards}"""
     write("topography/index.html", page("Historic topography - Guild's Lake Archive",
                                         [("Guild's Lake Archive", ""), ("Maps & data", None)],

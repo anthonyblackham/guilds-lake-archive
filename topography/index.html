@@ -49,6 +49,9 @@ th { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacin
 .panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px }
 .panels figure { margin: 0 }
 .panels img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: var(--panel) }
+.overview { margin: 22px 0 0 }
+.overview img { display: block; width: 100%; height: auto; border: 1px solid var(--rule) }
+.overview figcaption { font: 13px/1.5 var(--sans); color: var(--muted); margin-top: 6px }
 .panels figcaption { font: 12.5px/1.4 var(--sans); color: var(--muted); margin-top: 5px }
 @media (max-width: 700px) { .panels { grid-template-columns: minmax(0, 1fr) } }
 </style></head>
@@ -63,6 +66,9 @@ on the sheet and its height on the City of Portland datum, how it was traced, an
 &nbsp; <span class="note">GeoPackage, 2.9 MB &middot; EPSG:2913 (Oregon North, feet) &middot;
 10 layers + survey index &middot; <a href="https://github.com/anthonyblackham/guilds-lake-archive/blob/main/gis/README.md">README</a>
 &middot; <a href="https://github.com/anthonyblackham/guilds-lake-archive/blob/main/gis/LICENSE">CC BY 4.0</a></span></p>
+<figure class="overview"><a href="overview.jpg"><img src="overview.jpg" alt="Every survey's traced contours, coloured by height, over today's ground, each titled on its own lines"></a>
+<figcaption>Seven surveys, 1896&ndash;1910, on today's ground: every traced line on one height scale over the 2025
+aerial photograph and the lidar bare earth. Each title sits on the part of the map that drawing supplies.</figcaption></figure>
 <h2>The surveys</h2>
 <div class="scroll"><table><thead><tr><th>Survey</th><th>Date</th><th>Interval</th><th>Datum correction</th><th>Features</th></tr></thead>
 <tbody><tr><td><a href="../site/#map-00058-02640-6-front-jpg6366319132355342">USGS Portland quadrangle (1:62,500), the Scotch Nubbin</a></td>
@@ -80,64 +86,64 @@ on the sheet and its height on the City of Portland datum, how it was traced, an
 <td>none</td><td>244</td></tr><tr><td><a href="../site/#pdx-archives-forestry-extension">Contours along Forestry Extension, taken from map of Russell &amp; Blythe (Dept of Parks sheet 2)</a></td>
 <td>c. 1909-10</td><td>contours from Russell &amp; Blyth; pencilled creek marks and stadia shots</td>
 <td>none</td><td>53</td></tr></tbody></table></div>
-<p class="note">Each survey's title links to its sheet in the catalogue. Below, each survey three ways, in the same
-frame: the sheet as printed, the traced lines coloured by height over today's ground, and the ground they reconstruct,
-seen in perspective from the side it faces, coloured where the survey reconstructs it and grey (today) around it.</p>
+<p class="note">Each survey's title links to its sheet in the catalogue. Below, each survey three ways, all in the
+sheet's own frame and orientation: the sheet as printed, the traced lines coloured by height, and the ground they
+describe as shaded relief in the same colours. Click any panel for the full-size image.</p>
 <section class="card" id="usgs_1896"><h3>USGS Portland quadrangle (1:62,500), the Scotch Nubbin</h3>
 <p class="meta">surveyed 1896 &middot; U.S. Geological Survey (E. C. Barnard) &middot; 25 ft
 &middot; datum correction none<br>Placed: re-anchored on today&#x27;s remnant knob: +308 E, +57 N from the traced position; traced on J. C. Olmsted&#x27;s copy (Olmsted job 2640 plan 6), shifted +500 E, +460 N to the Willamette Heights road and Thurman St, then +308 E, +57 N; a small summit at 1:62,500, generalised by 100-250 ft
 <br>Layers: <code>usgs_1896_contours</code> &middot; <a href="../site/#map-00058-02640-6-front-jpg6366319132355342">the sheet in the catalogue</a></p>
 <div class="panels">
 <figure><a href="cards/usgs_1896-original.jpg"><img loading="lazy" src="cards/usgs_1896-original.jpg" alt="The USGS Portland quadrangle (1:62,500), the Scotch Nubbin as printed"></a><figcaption>The sheet</figcaption></figure>
-<figure><a href="cards/usgs_1896-contours.jpg"><img loading="lazy" src="cards/usgs_1896-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines over today's ground</figcaption></figure>
-<figure><a href="cards/usgs_1896-model.jpg"><img loading="lazy" src="cards/usgs_1896-model.jpg" alt="Reconstructed surface in perspective"></a><figcaption>The ground it reconstructs</figcaption></figure>
+<figure><a href="cards/usgs_1896-contours.jpg"><img loading="lazy" src="cards/usgs_1896-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines, coloured by height</figcaption></figure>
+<figure><a href="cards/usgs_1896-model.jpg"><img loading="lazy" src="cards/usgs_1896-model.jpg" alt="Reconstructed ground, shaded relief coloured by height"></a><figcaption>The ground they describe</figcaption></figure>
 </div></section><section class="card" id="huber_1902"><h3>Map of Willamette Heights and Guild&#x27;s Lake (Huber &amp; Maxwell survey)</h3>
 <p class="meta">August 1902 &middot; Huber &amp; Maxwell, Engineers &middot; 1 ft (labelled every 5); lake soundings
 &middot; datum correction none<br>Placed: +20 E, -10 N (fit to Olmsted plan 6 in their overlap); georeferenced in QGIS on street corners; shift fitted against plan 6 (mean |dz| 2.07 -&gt; 1.45 ft)
 <br>Layers: <code>huber_1902_contours</code>, <code>huber_1902_spot_heights</code> &middot; <a href="../site/#map-job02399-plan09-huber-maxwell-survey-blu">the sheet in the catalogue</a></p>
 <div class="panels">
 <figure><a href="cards/huber_1902-original.jpg"><img loading="lazy" src="cards/huber_1902-original.jpg" alt="The Map of Willamette Heights and Guild&#x27;s Lake (Huber &amp; Maxwell survey) as printed"></a><figcaption>The sheet</figcaption></figure>
-<figure><a href="cards/huber_1902-contours.jpg"><img loading="lazy" src="cards/huber_1902-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines over today's ground</figcaption></figure>
-<figure><a href="cards/huber_1902-model.jpg"><img loading="lazy" src="cards/huber_1902-model.jpg" alt="Reconstructed surface in perspective"></a><figcaption>The ground it reconstructs</figcaption></figure>
+<figure><a href="cards/huber_1902-contours.jpg"><img loading="lazy" src="cards/huber_1902-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines, coloured by height</figcaption></figure>
+<figure><a href="cards/huber_1902-model.jpg"><img loading="lazy" src="cards/huber_1902-model.jpg" alt="Reconstructed ground, shaded relief coloured by height"></a><figcaption>The ground they describe</figcaption></figure>
 </div></section><section class="card" id="olmsted_p6_1903"><h3>Topographic survey of the main grounds (Olmsted job 2399 plan 6, sheets 1-2 stitched)</h3>
 <p class="meta">c. 1903 &middot; for Olmsted Brothers &middot; 1 ft (index every 5)
 &middot; datum correction none<br>Placed: as georeferenced; 14 street-corner GCPs, RMS 4.4 ft
 <br>Layers: <code>olmsted_p6_1903_contours</code> &middot; <a href="../site/#map-job02399-plan06-topographic-survey-stitc">the sheet in the catalogue</a></p>
 <div class="panels">
 <figure><a href="cards/olmsted_p6_1903-original.jpg"><img loading="lazy" src="cards/olmsted_p6_1903-original.jpg" alt="The Topographic survey of the main grounds (Olmsted job 2399 plan 6, sheets 1-2 stitched) as printed"></a><figcaption>The sheet</figcaption></figure>
-<figure><a href="cards/olmsted_p6_1903-contours.jpg"><img loading="lazy" src="cards/olmsted_p6_1903-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines over today's ground</figcaption></figure>
-<figure><a href="cards/olmsted_p6_1903-model.jpg"><img loading="lazy" src="cards/olmsted_p6_1903-model.jpg" alt="Reconstructed surface in perspective"></a><figcaption>The ground it reconstructs</figcaption></figure>
+<figure><a href="cards/olmsted_p6_1903-contours.jpg"><img loading="lazy" src="cards/olmsted_p6_1903-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines, coloured by height</figcaption></figure>
+<figure><a href="cards/olmsted_p6_1903-model.jpg"><img loading="lazy" src="cards/olmsted_p6_1903-model.jpg" alt="Reconstructed ground, shaded relief coloured by height"></a><figcaption>The ground they describe</figcaption></figure>
 </div></section><section class="card" id="m1698_1906"><h3>Contour map of Blytheswood Park, part of the Danford Balch DLC (City Archives M/1698)</h3>
 <p class="meta">30 November 1906 &middot; for Russell &amp; Blyth &middot; 10 ft (index every 50)
 &middot; datum correction -3.4 ft<br>Placed: as georeferenced; sheet reads 3.4 ft above the city datum (index-line fit against the 2019 lidar)
 <br>Layers: <code>m1698_1906_contours</code> &middot; <a href="../site/#pdx-archives-m1698">the sheet in the catalogue</a></p>
 <div class="panels">
 <figure><a href="cards/m1698_1906-original.jpg"><img loading="lazy" src="cards/m1698_1906-original.jpg" alt="The Contour map of Blytheswood Park, part of the Danford Balch DLC (City Archives M/1698) as printed"></a><figcaption>The sheet</figcaption></figure>
-<figure><a href="cards/m1698_1906-contours.jpg"><img loading="lazy" src="cards/m1698_1906-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines over today's ground</figcaption></figure>
-<figure><a href="cards/m1698_1906-model.jpg"><img loading="lazy" src="cards/m1698_1906-model.jpg" alt="Reconstructed surface in perspective"></a><figcaption>The ground it reconstructs</figcaption></figure>
+<figure><a href="cards/m1698_1906-contours.jpg"><img loading="lazy" src="cards/m1698_1906-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines, coloured by height</figcaption></figure>
+<figure><a href="cards/m1698_1906-model.jpg"><img loading="lazy" src="cards/m1698_1906-model.jpg" alt="Reconstructed ground, shaded relief coloured by height"></a><figcaption>The ground they describe</figcaption></figure>
 </div></section><section class="card" id="m1697_westover"><h3>Contour Map of Parts of Westover Terraces and Vicinity (City Archives M/1697)</h3>
 <p class="meta">traced 22 March 1917 from surveys of c. 1906-10 &middot; Dept of Public Works (Herner tracing) &middot; 25 ft
 &middot; datum correction -3.4 ft<br>Placed: as georeferenced (stitched from photographs); read 3.4 ft lower to match M/1698
 <br>Layers: <code>m1697_westover_contours</code> &middot; <a href="../site/#pdx-archives-m1697">the sheet in the catalogue</a></p>
 <div class="panels">
 <figure><a href="cards/m1697_westover-original.jpg"><img loading="lazy" src="cards/m1697_westover-original.jpg" alt="The Contour Map of Parts of Westover Terraces and Vicinity (City Archives M/1697) as printed"></a><figcaption>The sheet</figcaption></figure>
-<figure><a href="cards/m1697_westover-contours.jpg"><img loading="lazy" src="cards/m1697_westover-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines over today's ground</figcaption></figure>
-<figure><a href="cards/m1697_westover-model.jpg"><img loading="lazy" src="cards/m1697_westover-model.jpg" alt="Reconstructed surface in perspective"></a><figcaption>The ground it reconstructs</figcaption></figure>
+<figure><a href="cards/m1697_westover-contours.jpg"><img loading="lazy" src="cards/m1697_westover-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines, coloured by height</figcaption></figure>
+<figure><a href="cards/m1697_westover-model.jpg"><img loading="lazy" src="cards/m1697_westover-model.jpg" alt="Reconstructed ground, shaded relief coloured by height"></a><figcaption>The ground they describe</figcaption></figure>
 </div></section><section class="card" id="job5174_1910"><h3>Lewis-Wiley Company: Balch&#x27;s Gulch, north of Thurman Street (Olmsted job 5174 plan 1)</h3>
 <p class="meta">10 May 1910 &middot; Lewis-Wiley Co. &middot; contours ~5 ft, spot heights
 &middot; datum correction none<br>Placed: as georeferenced; matches Olmsted plan 6 within ~2 ft (median)
 <br>Layers: <code>job5174_1910_contours</code>, <code>job5174_1910_spot_heights</code> &middot; <a href="../site/#map-job05174-plan01-north-of-thurman-sheet-b">the sheet in the catalogue</a></p>
 <div class="panels">
 <figure><a href="cards/job5174_1910-original.jpg"><img loading="lazy" src="cards/job5174_1910-original.jpg" alt="The Lewis-Wiley Company: Balch&#x27;s Gulch, north of Thurman Street (Olmsted job 5174 plan 1) as printed"></a><figcaption>The sheet</figcaption></figure>
-<figure><a href="cards/job5174_1910-contours.jpg"><img loading="lazy" src="cards/job5174_1910-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines over today's ground</figcaption></figure>
-<figure><a href="cards/job5174_1910-model.jpg"><img loading="lazy" src="cards/job5174_1910-model.jpg" alt="Reconstructed surface in perspective"></a><figcaption>The ground it reconstructs</figcaption></figure>
+<figure><a href="cards/job5174_1910-contours.jpg"><img loading="lazy" src="cards/job5174_1910-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines, coloured by height</figcaption></figure>
+<figure><a href="cards/job5174_1910-model.jpg"><img loading="lazy" src="cards/job5174_1910-model.jpg" alt="Reconstructed ground, shaded relief coloured by height"></a><figcaption>The ground they describe</figcaption></figure>
 </div></section><section class="card" id="forestry_ext_c1910"><h3>Contours along Forestry Extension, taken from map of Russell &amp; Blythe (Dept of Parks sheet 2)</h3>
 <p class="meta">c. 1909-10 &middot; Dept of Parks, after Russell &amp; Blyth &middot; contours from Russell &amp; Blyth; pencilled creek marks and stadia shots
 &middot; datum correction none<br>Placed: thin plate spline warp; TPS on street and section GCPs, RMS 7.7 ft (leave-one-out median 13.6 ft); stadia shots read ~15 ft high and are corrected by -15 ft
 <br>Layers: <code>forestry_ext_c1910_spot_heights</code>, <code>forestry_ext_c1910_contours</code> &middot; <a href="../site/#pdx-archives-forestry-extension">the sheet in the catalogue</a></p>
 <div class="panels">
 <figure><a href="cards/forestry_ext_c1910-original.jpg"><img loading="lazy" src="cards/forestry_ext_c1910-original.jpg" alt="The Contours along Forestry Extension, taken from map of Russell &amp; Blythe (Dept of Parks sheet 2) as printed"></a><figcaption>The sheet</figcaption></figure>
-<figure><a href="cards/forestry_ext_c1910-contours.jpg"><img loading="lazy" src="cards/forestry_ext_c1910-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines over today's ground</figcaption></figure>
-<figure><a href="cards/forestry_ext_c1910-model.jpg"><img loading="lazy" src="cards/forestry_ext_c1910-model.jpg" alt="Reconstructed surface in perspective"></a><figcaption>The ground it reconstructs</figcaption></figure>
+<figure><a href="cards/forestry_ext_c1910-contours.jpg"><img loading="lazy" src="cards/forestry_ext_c1910-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines, coloured by height</figcaption></figure>
+<figure><a href="cards/forestry_ext_c1910-model.jpg"><img loading="lazy" src="cards/forestry_ext_c1910-model.jpg" alt="Reconstructed ground, shaded relief coloured by height"></a><figcaption>The ground they describe</figcaption></figure>
 </div></section></main>
 </div></body></html>

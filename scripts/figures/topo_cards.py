@@ -1,12 +1,16 @@
-r"""Showcase cards for the historic topography page: three images per survey, all in one square frame.
+r"""Showcase images for the historic topography page.
 
-    python scripts/figures/topo_cards.py [survey_id ...]
+    python scripts/figures/topo_cards.py [survey_id ...]     the survey cards (all, or the ones named)
+    python scripts/figures/topo_cards.py overview            the overview of every survey on today's ground
 
-For each survey in gis/historic_topography.gpkg (layer `surveys`):
-  topography/cards/<id>-original.jpg   the georeferenced sheet (as printed), cropped to the frame
-  topography/cards/<id>-contours.jpg   the traced contours / spot heights coloured by height (city datum) over today's
-                                       ground (2019 lidar hillshade)
-  topography/cards/<id>-model.jpg      an oblique view of the reconstructed surface built from them, same colours
+For each survey in gis/historic_topography.gpkg (layer `surveys`), three panels in the sheet's own frame and
+orientation, cropped to the traced lines:
+  topography/cards/<id>-original.jpg   the sheet as printed
+  topography/cards/<id>-contours.jpg   the traced contours / spot heights coloured by height (city datum), over the
+                                       sheet faded into a dark ground
+  topography/cards/<id>-model.jpg      the reconstructed ground, shaded relief in the same colours
+And topography/overview.jpg: every survey's lines on one height scale over today's ground (the 2025 aerial in grey,
+multiplied onto the lidar hillshade), each titled on its main body.
 Reads the research project (lewis-clark-1905) read-only. Scans are placed with the project's own georeferences (world
 files or the QGIS .points GCPs, fitted affine here) plus the same shifts the exported lines carry.
 """
@@ -18,7 +22,10 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
+import matplotlib.patheffects as pe  # noqa: E402
 from matplotlib.colors import LightSource  # noqa: E402
+from PIL import Image  # noqa: E402
+from pyogrio import list_layers  # noqa: E402
 from pyogrio.raw import read  # noqa: E402
 from shapely import from_wkb  # noqa: E402
 
@@ -30,10 +37,12 @@ G = P / "qgis" / "georeference"
 T = P / "qgis" / "terrain"
 GPKG = S.HERE / "gis" / "historic_topography.gpkg"
 OUT = S.HERE / "topography" / "cards"
-PX = 900               # each panel, square
+PW = 1200              # panel width; height follows the sheet
+DARK = np.array([0x12, 0x15, 0x1c]) / 255   # ground of the contour and relief panels
+Image.MAX_IMAGE_PIXELS = None
 OFFSET = 3.4           # M/1698, M/1697 sheets read this high (the hills surface is stored at sheet heights)
 from matplotlib.colors import LinearSegmentedColormap  # noqa: E402
-CMAP = LinearSegmentedColormap.from_list("topo", plt.get_cmap("terrain")(np.linspace(0.12, 0.82, 256)))   # no white top
+CMAP = LinearSegmentedColormap.from_list("ramp", plt.get_cmap("turbo")(np.linspace(0.08, 0.95, 256)))   # rainbow, no black ends
 
 SCANS = {   # survey_id: (image, georeference kind, georeference file, shift E, shift N)
     "usgs_1896": (G / "olmsted_02640-6_usgs1896_willamette_heights_local.png", "world",
@@ -50,10 +59,15 @@ SCANS = {   # survey_id: (image, georeference kind, georeference file, shift E, 
     "forestry_ext_c1910": (G / "forestry_extension_contours_russell_blythe_mosaic_warped.jpg", "world",
                            G / "forestry_extension_contours_russell_blythe_mosaic_warped.jgw", 0, 0),
 }
-VIEW = {   # view azimuth for the oblique (my convention: -35 = from the south-east, -135 = from the north-east, 180 = from
-           # the north): each survey seen from the side its ground faces (the hills fall north and east to the gulch and lake)
-    "usgs_1896": -135, "m1698_1906": -135, "m1697_westover": -135, "forestry_ext_c1910": -135,
-    "job5174_1910": 180, "huber_1902": 180, "olmsted_p6_1903": 180,
+SHORT = {   # overview titles
+    "usgs_1896": "USGS 1896", "huber_1902": "Huber & Maxwell 1902", "olmsted_p6_1903": "Olmsted plan 6, 1903",
+    "m1698_1906": "Blytheswood 1906", "m1697_westover": "Westover c.1906-10", "job5174_1910": "Balch's Gulch 1910",
+    "forestry_ext_c1910": "Forestry Ext. c.1910",
+}
+ANCHOR = {   # where each overview title sits (EPSG:2913 ft): on the main body of that survey's lines, placed by hand
+    "huber_1902": (7635046, 692771), "olmsted_p6_1903": (7637262, 690178), "job5174_1910": (7635612, 689565),
+    "usgs_1896": (7634103, 688716), "forestry_ext_c1910": (7633019, 687679), "m1698_1906": (7634716, 687396),
+    "m1697_westover": (7636178, 686972),
 }
 SURFACES = {   # survey_id: [(dem, shift to the city datum), ...] first with data wins; else today's lidar
     "usgs_1896": [("nubbin_1896_dem", 0.0)],
@@ -81,155 +95,170 @@ def affine_from(kind, path, scale):
     return A
 
 
-def scan_panel(sid, frame, cell):
-    img, kind, ref, dx, dy = SCANS[sid]
-    probe = cv2.imread(str(img), cv2.IMREAD_REDUCED_COLOR_4)
-    scale = 1
-    if probe is not None and max(probe.shape[:2]) * 4 > 9000:
-        scale = 2 if max(probe.shape[:2]) * 4 <= 18000 else 4
-    flag = {1: cv2.IMREAD_COLOR, 2: cv2.IMREAD_REDUCED_COLOR_2, 4: cv2.IMREAD_REDUCED_COLOR_4}[scale]
-    a = cv2.imread(str(img), flag)
-    A = affine_from(kind, ref, scale)
-    A[:, 2] += (dx, dy)
-    Ai = np.linalg.inv(np.vstack([A, [0, 0, 1]]))
-    x0, x1, y0, y1 = frame
-    gx, gy = np.meshgrid(np.linspace(x0, x1, PX), np.linspace(y1, y0, PX))
-    col = Ai[0, 0] * gx + Ai[0, 1] * gy + Ai[0, 2]
-    row = Ai[1, 0] * gx + Ai[1, 1] * gy + Ai[1, 2]
-    return cv2.remap(a, col.astype(np.float32), row.astype(np.float32), cv2.INTER_AREA if scale == 1 else cv2.INTER_LINEAR,
-                     borderMode=cv2.BORDER_CONSTANT, borderValue=(228, 222, 210))
-
-
-def grid(name, frame, n):
+def sample(name, gx, gy, nodata=True):
+    """A terrain raster sampled at map points; NaN across its no-data (unless nodata=False)."""
     a = cv2.imread(str(T / f"{name}.tif"), cv2.IMREAD_UNCHANGED).astype(np.float32)
     w = [float(v) for v in (T / f"{name}.tfw").read_text().split()]
-    x0, x1, y0, y1 = frame
-    gx, gy = np.meshgrid(np.linspace(x0, x1, n), np.linspace(y1, y0, n))
     mx, my = ((gx - w[4]) / w[0]).astype(np.float32), ((gy - w[5]) / w[3]).astype(np.float32)
     z = cv2.remap(a, mx, my, cv2.INTER_LINEAR, borderValue=-9999)
+    if not nodata:
+        return z
     bad = cv2.remap((a < -9000).astype(np.float32), mx, my, cv2.INTER_LINEAR, borderValue=1)
-    return np.where(bad < 1e-3, z, np.nan)           # no blending across no-data edges
-
-
-def write_oblique(z, col, cellft, path, az=-35.0, el=34.0, vex=1.6):
-    """Orthographic oblique render of a height grid (rows north -> south) with per-cell colours, z-buffered splats.
-    Viewer to the south-east (az = view azimuth from north, degrees), looking down at el degrees."""
-    n = z.shape[0]
-    jj, ii = np.meshgrid(np.arange(n), np.arange(n))
-    x = jj * cellft
-    y = (n - 1 - ii) * cellft
-    a = np.radians(az)
-    xr = x * np.cos(a) - y * np.sin(a)                  # across the view
-    yr = x * np.sin(a) + y * np.cos(a)                  # into the view (depth)
-    e = np.radians(el)
-    zr = z - np.nanmin(z)
-    sy = yr * np.sin(e) + zr * vex * np.cos(e)          # up the screen
-    W = H = PX
-    sx = (xr - xr.min()) / (xr.max() - xr.min()) * (W * 0.9) + W * 0.05
-    span = sy.max() - sy.min()
-    k = (W * 0.9) / (xr.max() - xr.min())
-    sv = H * 0.5 + (sy.min() + span / 2 - sy) * k
-    img = np.full((H, W, 3), [0xf4 / 255, 0xef / 255, 0xe4 / 255], np.float32)
-    zb = np.full((H, W), np.inf, np.float32)
-    order = np.argsort(-yr.ravel())                     # far to near
-    u0, v0 = sx.ravel()[order], sv.ravel()[order]
-    dep, cc = yr.ravel()[order], col.reshape(-1, 3)[order]   # nearer = smaller depth
-    r = max(1, int(np.ceil(k * cellft)))
-    for du in range(r + 2):
-        for dv in range(r + 7):
-            u = (u0 + du).astype(int); v = (v0 + dv).astype(int)
-            m = (u >= 0) & (u < W) & (v >= 0) & (v < H)
-            uu, vv, dd, c = u[m], v[m], dep[m], cc[m]
-            near = dd < zb[vv, uu]
-            img[vv[near], uu[near]] = c[near]; zb[vv[near], uu[near]] = dd[near]
-    cv2.imwrite(str(path), (np.clip(img, 0, 1)[..., ::-1] * 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 86])
+    return np.where(bad < 1e-3, z, np.nan)
 
 
 def features(sid):
-    from pyogrio import list_layers
     out = []
     for L, _ in list_layers(GPKG):
         if L.startswith(sid):
             m, _, g, d = read(GPKG, layer=L)
             f = dict(zip(m["fields"], d))
-            out += [(q, float(e) if e is not None else np.nan, k) for q, e, k in zip(from_wkb(g), f["elev_city"], f["kind"])]
+            out += [(q, float(e) if e is not None else np.nan) for q, e in zip(from_wkb(g), f["elev_city"])]
     return out
 
 
-def save(fig, name):
-    OUT.mkdir(parents=True, exist_ok=True)
-    fig.savefig(OUT / name, dpi=PX / 6, facecolor=S.PAPER, pil_kwargs={"quality": 86})
+def height_norm(feats):
+    vals = np.array([e for _, e in feats if np.isfinite(e)])
+    lo, hi = np.percentile(vals, 1), np.percentile(vals, 99)
+    if hi - lo < 10:
+        lo, hi = lo - 5, hi + 5
+    return plt.Normalize(lo, hi)
+
+
+def jpg(path, rgb):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    cv2.imwrite(str(path), (np.clip(rgb, 0, 1)[..., ::-1] * 255).astype(np.uint8), [cv2.IMWRITE_JPEG_QUALITY, 86])
+
+
+def rendered(fig):
+    fig.canvas.draw()
+    out = np.asarray(fig.canvas.buffer_rgba())[..., :3] / 255
     plt.close(fig)
+    return out
 
 
 def card(sid, footprint):
-    bx0, by0, bx1, by1 = footprint.bounds
-    side = max(bx1 - bx0, by1 - by0) * 1.04
-    cx, cy = (bx0 + bx1) / 2, (by0 + by1) / 2
-    frame = (cx - side / 2, cx + side / 2, cy - side / 2, cy + side / 2)
-    OUT.mkdir(parents=True, exist_ok=True)
+    img, kind, ref, dx, dy = SCANS[sid]
+    A = affine_from(kind, ref, 1)
+    A[:, 2] += (dx, dy)                                      # (col, row, 1) -> (E, N)
+    Ai = np.linalg.inv(np.vstack([A, [0, 0, 1]]))[:2]        # (E, N, 1) -> (col, row)
     feats = features(sid)
-    vals = np.array([e for _, e, _ in feats if np.isfinite(e)])
-    lo, hi = np.percentile(vals, 2), np.percentile(vals, 98)
-    if hi - lo < 10:
-        lo, hi = lo - 5, hi + 5
-    norm = plt.Normalize(lo, hi)
-    # 1. the sheet
-    sc = scan_panel(sid, frame, side / PX)
-    cv2.imwrite(str(OUT / f"{sid}-original.jpg"), sc, [cv2.IMWRITE_JPEG_QUALITY, 86])
-    # 2. the traced lines over today's ground
-    today = grid("balch_hills_dem", frame, 600) - 2.10
-    gy_, gx_ = np.gradient(np.nan_to_num(today, nan=np.nanmin(today)), side / 600)
-    sl = np.arctan(np.hypot(gx_, gy_) * 1.3)
-    shade = np.clip(np.sin(0.7) * np.cos(sl) + np.cos(0.7) * np.sin(sl) * np.cos(np.radians(315) - np.arctan2(-gx_, gy_)), 0, 1)
-    fig = plt.figure(figsize=(6, 6), facecolor=S.PAPER)
+    norm = height_norm(feats)
+    # the crop: the traced lines in sheet pixels, plus a margin
+    P = np.vstack([np.asarray(part.coords) for q, _ in feats for part in getattr(q, "geoms", [q])])
+    cr = P @ Ai[:, :2].T + Ai[:, 2]
+    c0, r0 = cr.min(axis=0)
+    c1, r1 = cr.max(axis=0)
+    m = 0.04 * max(c1 - c0, r1 - r0)
+    w, h = Image.open(img).size
+    c0, r0, c1, r1 = max(0, c0 - m), max(0, r0 - m), min(w, c1 + m), min(h, r1 + m)
+    s = PW / (c1 - c0)
+    PH = int(round((r1 - r0) * s))
+    # 1. the sheet as printed
+    a = cv2.imread(str(img), cv2.IMREAD_COLOR)
+    sheet = cv2.resize(a[int(r0):int(r1), int(c0):int(c1)], (PW, PH), interpolation=cv2.INTER_AREA)[..., ::-1] / 255
+    del a
+    jpg(OUT / f"{sid}-original.jpg", sheet)
+    # 2. the traced lines coloured by height, drawn in sheet pixels over the sheet faded into the dark ground
+    fig = plt.figure(figsize=(PW / 100, PH / 100), dpi=100)
     ax = fig.add_axes([0, 0, 1, 1])
-    ax.imshow(shade, cmap="gray", extent=frame, vmin=-0.4, vmax=1.25, interpolation="bilinear")
-    for q, e, k in feats:
-        col = CMAP(norm(e)) if np.isfinite(e) else (0.55, 0.5, 0.45, 1)
-        if q.geom_type == "Point":
-            ax.plot(q.x, q.y, "o", ms=2.2, color=col, mec="none")
-        else:
-            for part in getattr(q, "geoms", [q]):
-                x, y = part.xy
-                ax.plot(x, y, color=col, lw=1.4 if k == "index" else 0.9)
-    ax.set_xlim(frame[0], frame[1]); ax.set_ylim(frame[2], frame[3]); ax.set_aspect("equal"); ax.axis("off")
-    cax = fig.add_axes([0.06, 0.05, 0.4, 0.022])
+    ax.axis("off")
+    ax.imshow(DARK * 0.85 + sheet * 0.15, extent=(0, PW, PH, 0))
+    lw = 0.9 * PW / 1200
+    for q, e in feats:
+        col = CMAP(norm(e)) if np.isfinite(e) else (0.6, 0.6, 0.6, 1)
+        for part in getattr(q, "geoms", [q]):
+            uv = (np.asarray(part.coords) @ Ai[:, :2].T + Ai[:, 2] - (c0, r0)) * s
+            if part.geom_type == "Point":
+                ax.plot(uv[:, 0], uv[:, 1], ".", color=col, ms=3 * lw)
+            else:
+                ax.plot(uv[:, 0], uv[:, 1], color=col, lw=lw, solid_capstyle="round")
+    ax.set_xlim(0, PW)
+    ax.set_ylim(PH, 0)
+    cax = fig.add_axes([0.60, 0.045, 0.36, 18 / PH])
     cb = fig.colorbar(plt.cm.ScalarMappable(norm=norm, cmap=CMAP), cax=cax, orientation="horizontal")
-    cb.set_label("ft above the city datum", fontsize=7, color=S.INK); cb.ax.tick_params(labelsize=6.5, colors=S.INK)
-    cax.patch.set_alpha(0)
-    save(fig, f"{sid}-contours.jpg")
-    # 3. the reconstructed surface: oblique view from the south-east, lit from the north-west; coloured where the survey
-    #    reconstructs the ground, today's ground in grey around it for context
-    n = 420
-    z = np.full((n, n), np.nan)
+    cb.ax.tick_params(labelsize=10, colors="white")
+    cb.outline.set_edgecolor("white")
+    cb.set_label("ft above the city datum", color="white", fontsize=10)
+    jpg(OUT / f"{sid}-contours.jpg", rendered(fig))
+    # 3. the reconstructed ground in the same frame: rainbow by height, shaded relief lit from the panel's upper left,
+    #    only inside the survey's footprint
+    jj, ii = np.meshgrid(np.arange(PW) + 0.5, np.arange(PH) + 0.5)
+    cc, rr = c0 + jj / s, r0 + ii / s
+    gx = (A[0, 0] * cc + A[0, 1] * rr + A[0, 2]).astype(np.float32)
+    gy = (A[1, 0] * cc + A[1, 1] * rr + A[1, 2]).astype(np.float32)
+    z = np.full(gx.shape, np.nan, np.float32)
     for name, dz in SURFACES[sid]:
-        zz = grid(name, frame, n) - dz
-        z = np.where(np.isfinite(z), z, zz)
-    base = grid("balch_hills_dem", frame, n) - 2.10
-    inside = np.isfinite(z)
-    z = np.where(inside, z, base)
-    z = np.where(np.isfinite(z), z, np.nanmin(z))
-    cellft = side / n
-    ls = LightSource(azdeg=315, altdeg=38)
-    hs = ls.hillshade(z, vert_exag=1.6, dx=cellft, dy=cellft)
-    col = CMAP(norm(z))[..., :3]
-    col = np.clip(col * (0.45 + 0.75 * hs[..., None]), 0, 1)
-    grey = (0.38 + 0.55 * hs)[..., None] * np.array([0.93, 0.91, 0.88])
-    col = np.where(inside[..., None], col, grey * 0.9 + 0.08)
-    rr, cc = np.nonzero(inside)                        # crop to the reconstructed area, plus a margin of context
-    pad = int(0.15 * max(np.ptp(rr), np.ptp(cc))) + 4
-    r0, r1 = max(rr.min() - pad, 0), min(rr.max() + pad, n - 1)
-    c0, c1 = max(cc.min() - pad, 0), min(cc.max() + pad, n - 1)
-    m = max(r1 - r0, c1 - c0)
-    r0 = max(min(r0, n - 1 - m), 0); c0 = max(min(c0, n - 1 - m), 0)
-    sl_ = (slice(r0, r0 + m + 1), slice(c0, c0 + m + 1))
-    write_oblique(z[sl_], col[sl_], cellft, OUT / f"{sid}-model.jpg", az=VIEW.get(sid, -35.0))
-    print(sid, "frame", round(side), "ft;", len(feats), "features; colour range", round(lo), "-", round(hi))
-    return frame, (lo, hi)
+        z = np.where(np.isfinite(z), z, sample(name, gx, gy) - dz)
+    mk = np.zeros((PH, PW), np.uint8)
+    ring = (np.asarray(footprint.exterior.coords) @ Ai[:, :2].T + Ai[:, 2] - (c0, r0)) * s
+    cv2.fillPoly(mk, [ring.round().astype(np.int32)], 1)
+    inside = np.isfinite(z) & (mk > 0)
+    zf = np.where(np.isfinite(z), z, np.nanmedian(z))
+    cell = np.hypot(A[0, 0], A[1, 0]) / s                    # ft per panel pixel
+    # shaded like the bare-earth lidar: grey hillshade lit from several directions (mostly the panel's upper left),
+    # darkened on steep slopes, heights x2; then the height colours laid over it at half strength
+    vex = 2.0
+    hs = sum(wt * LightSource(azdeg=az, altdeg=40).hillshade(zf, vert_exag=vex, dx=cell, dy=cell, fraction=1.0)
+             for az, wt in ((315, 0.5), (270, 0.2), (360, 0.2), (225, 0.1)))
+    gyy, gxx = np.gradient(zf * vex, cell)
+    grey = hs * (1 - 0.45 * np.clip(np.degrees(np.arctan(np.hypot(gxx, gyy))) / 70, 0, 1))
+    col = grey[..., None] * (0.5 + 0.5 * CMAP(norm(zf))[..., :3]) * 1.1
+    jpg(OUT / f"{sid}-model.jpg", np.where(inside[..., None], np.clip(col, 0, 1), DARK))
+    print(sid, f"{PW}x{PH};", len(feats), "features; colour range", round(norm.vmin), "-", round(norm.vmax))
+
+
+def overview(W=1800):
+    m, _, g, d = read(GPKG, layer="surveys")
+    f = dict(zip(m["fields"], d))
+    dates = dict(zip(f["survey_id"], f["date"]))
+    feats = {sid: features(sid) for sid in f["survey_id"]}
+    P = np.vstack([np.asarray(part.coords) for fs in feats.values() for q, _ in fs for part in getattr(q, "geoms", [q])])
+    frame = (P[:, 0].min() - 350, P[:, 0].max() + 350, P[:, 1].min() - 350, P[:, 1].max() + 350)
+    fw, fh = frame[1] - frame[0], frame[3] - frame[2]
+    H = int(W * fh / fw)
+    cell = fw / W
+    gx, gy = np.meshgrid(np.linspace(frame[0], frame[1], W), np.linspace(frame[3], frame[2], H))
+    # today's ground: the 2025 aerial in grey, multiplied onto the lidar hillshade, darkened so the colours carry
+    ph = cv2.imread(str(T / "basemap_aerial_2025.jpg"), cv2.IMREAD_GRAYSCALE).astype(np.float32) / 255
+    w = [float(v) for v in (T / "basemap_aerial_2025.jgw").read_text().split()]
+    ph = cv2.remap(ph, ((gx - w[4]) / w[0]).astype(np.float32), ((gy - w[5]) / w[3]).astype(np.float32), cv2.INTER_AREA)
+    hs = LightSource(azdeg=315, altdeg=40).hillshade(sample("balch_hills_dem", gx, gy, False), vert_exag=1.5,
+                                                     dx=cell, dy=cell)
+    base = 0.12 + 0.62 * np.clip(0.55 * ph * (0.35 + 0.85 * hs) + 0.45 * (0.15 + 0.8 * hs), 0, 1)
+    norm = height_norm([x for fs in feats.values() for x in fs])
+    fig = plt.figure(figsize=(W / 100, H / 100), dpi=100)
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.axis("off")
+    ax.imshow(np.repeat(base[..., None], 3, axis=2), extent=frame)
+    order = sorted(feats, key=lambda k: str(dates[k]))
+    for sid in order:
+        for q, e in feats[sid]:
+            col = CMAP(norm(e)) if np.isfinite(e) else (0.6, 0.6, 0.6, 1)
+            for part in getattr(q, "geoms", [q]):
+                if part.geom_type == "Point":
+                    ax.plot(part.x, part.y, ".", color=col, ms=1.6)
+                else:
+                    x, y = part.xy
+                    ax.plot(x, y, color=col, lw=0.45)
+    halo = [pe.withStroke(linewidth=3.5, foreground="black")]
+    for sid in order:
+        ax.text(*ANCHOR[sid], SHORT[sid], color="white", fontsize=13, fontweight="bold", ha="center", va="center",
+                path_effects=halo)
+    ax.set_xlim(frame[0], frame[1])
+    ax.set_ylim(frame[2], frame[3])
+    cax = fig.add_axes([0.70, 0.04, 0.27, 0.015])
+    cb = fig.colorbar(plt.cm.ScalarMappable(norm=norm, cmap=CMAP), cax=cax, orientation="horizontal")
+    cb.ax.tick_params(labelsize=9, colors="white")
+    cb.outline.set_edgecolor("white")
+    cb.set_label("ft above the city datum", color="white", fontsize=9)
+    jpg(S.HERE / "topography" / "overview.jpg", rendered(fig))
+    print("overview", W, H)
 
 
 def main():
+    if sys.argv[1:] == ["overview"]:
+        return overview()
     m, _, g, d = read(GPKG, layer="surveys")
     ids = dict(zip(m["fields"], d))["survey_id"]
     want = set(sys.argv[1:])
