@@ -57,6 +57,14 @@ th { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacin
 .dl { display: inline-block; background: var(--accent); color: var(--bg); text-decoration: none; padding: 9px 16px;
   border-radius: 6px; font: 500 15px var(--sans) }
 .note { font: 14px/1.55 var(--sans); color: var(--muted) }
+.card { margin: 36px 0 0; padding-top: 22px; border-top: 1px solid var(--rule) }
+.card h3 { font: 600 22px/1.25 var(--serif); margin: 0 0 4px; text-wrap: balance }
+.card .meta { font: 13.5px/1.55 var(--sans); color: var(--muted); margin: 0 0 12px }
+.panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px }
+.panels figure { margin: 0 }
+.panels img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: var(--panel) }
+.panels figcaption { font: 12.5px/1.4 var(--sans); color: var(--muted); margin-top: 5px }
+@media (max-width: 700px) { .panels { grid-template-columns: minmax(0, 1fr) } }
 """
 
 
@@ -129,6 +137,23 @@ def main():
 <td>{html.escape(s['date'])}</td><td>{html.escape(s['interval'])}</td>
 <td>{'none' if corr == 0 else f'{corr:+.1f} ft'}</td><td>{int(float(s['features'])):,}</td></tr>""")
     layers = [L for L, _ in list_layers(GPKG) if L != "surveys"]
+    cards = []
+    for sv in surveys:
+        sid = sv["survey_id"]
+        if not (HERE / "topography" / "cards" / f"{sid}-model.jpg").exists():
+            continue
+        corr = float(sv["datum_correction_ft"])
+        lays = ", ".join(f"<code>{L}</code>" for L in layers if L.startswith(sid))
+        cards.append(f"""<section class="card" id="{sid}"><h3>{html.escape(sv['title'])}</h3>
+<p class="meta">{html.escape(sv['date'])} &middot; {html.escape(sv['surveyor'])} &middot; {html.escape(sv['interval'])}
+&middot; datum correction {'none' if corr == 0 else f'{corr:+.1f} ft'}<br>Placed: {html.escape(sv['position'])}; {html.escape(sv['fit'])}
+<br>Layers: {lays} &middot; <a href="../site/#{html.escape(sv['source_id'])}">the sheet in the catalogue</a></p>
+<div class="panels">
+<figure><a href="cards/{sid}-original.jpg"><img loading="lazy" src="cards/{sid}-original.jpg" alt="The {html.escape(sv['title'])} as printed"></a><figcaption>The sheet</figcaption></figure>
+<figure><a href="cards/{sid}-contours.jpg"><img loading="lazy" src="cards/{sid}-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines over today's ground</figcaption></figure>
+<figure><a href="cards/{sid}-model.jpg"><img loading="lazy" src="cards/{sid}-model.jpg" alt="Reconstructed surface in perspective"></a><figcaption>The ground it reconstructs</figcaption></figure>
+</div></section>""")
+    cards = "".join(cards)
     topo = f"""
 <p>Contours and spot heights traced from the historic surveys of Guild's Lake and the hills behind it, from 1896 to
 about 1910, before and during the sluicing and filling that reshaped the ground. Every line carries the height printed
@@ -140,8 +165,10 @@ on the sheet and its height on the City of Portland datum, how it was traced, an
 <h2>The surveys</h2>
 <div class="scroll"><table><thead><tr><th>Survey</th><th>Date</th><th>Interval</th><th>Datum correction</th><th>Features</th></tr></thead>
 <tbody>{''.join(rows)}</tbody></table></div>
-<p class="note">Each survey's title links to its sheet in the catalogue. Coming next: a showcase card for each survey,
-with the original sheet, its contours coloured by height over today's ground, and the reconstructed terrain.</p>"""
+<p class="note">Each survey's title links to its sheet in the catalogue. Below, each survey three ways, in the same
+frame: the sheet as printed, the traced lines coloured by height over today's ground, and the ground they reconstruct,
+seen in perspective from the side it faces, coloured where the survey reconstructs it and grey (today) around it.</p>
+{cards}"""
     write("topography/index.html", page("Historic topography - Guild's Lake Archive",
                                         [("Guild's Lake Archive", ""), ("Maps & data", None)],
                                         "<h1>Historic topography</h1><p>The ground before it was cut and filled.</p>", topo, 1))

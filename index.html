@@ -43,6 +43,14 @@ th { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacin
 .dl { display: inline-block; background: var(--accent); color: var(--bg); text-decoration: none; padding: 9px 16px;
   border-radius: 6px; font: 500 15px var(--sans) }
 .note { font: 14px/1.55 var(--sans); color: var(--muted) }
+.card { margin: 36px 0 0; padding-top: 22px; border-top: 1px solid var(--rule) }
+.card h3 { font: 600 22px/1.25 var(--serif); margin: 0 0 4px; text-wrap: balance }
+.card .meta { font: 13.5px/1.55 var(--sans); color: var(--muted); margin: 0 0 12px }
+.panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px }
+.panels figure { margin: 0 }
+.panels img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: var(--panel) }
+.panels figcaption { font: 12.5px/1.4 var(--sans); color: var(--muted); margin-top: 5px }
+@media (max-width: 700px) { .panels { grid-template-columns: minmax(0, 1fr) } }
 </style></head>
 <body><div class="wrap">
 <nav class="top"><span class="here">Guild&#x27;s Lake Archive</span></nav>
