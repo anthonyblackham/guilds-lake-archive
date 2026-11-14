@@ -5,7 +5,7 @@ r"""Figures for the Pence story, chapter 2 (the big idea, 1905).
 Reads the research project (lewis-clark-1905) read-only; writes stories/pence/figures/ch2-*.jpg.
   ch2-ditch-1905   Sunday Oregonian 21 May 1905 p. 31, "Lafe Pence's Ditch and What He Purposes to Accomplish" (as printed)
   ch2-works-map    the Pence Company Canal and High Line Flume as mapped in 1906 (City Archives A2009-009.3473; the
-                   user's hand trace, expo-model.gpkg pence_canal_trace_1906_hand), on a muted OpenStreetMap base, with
+                   user's hand trace moved by their 33 SAIL-corner GCPs, expo-model.gpkg pence_canal_trace_1906_hand_tps), on a muted OpenStreetMap base, with
                    the 1902 lake, Macleay Park, the Scotch Nubbin and Sylvan (the 1905 plan's tunnel route)
 """
 import json
@@ -103,7 +103,7 @@ def works_map():
         x, y = poly.exterior.xy
         ax.fill(x, y, color="#6f8f5a", alpha=0.35, lw=0)
     # the 1906 routes (user's trace)
-    m, _, g, d = read(P / "qgis" / "expo-model.gpkg", layer="pence_canal_trace_1906_hand")
+    m, _, g, d = read(P / "qgis" / "expo-model.gpkg", layer="pence_canal_trace_1906_hand_tps")
     names = dict(zip(m["fields"], d))["name"]
     ends = {}
     for q, n in zip(from_wkb(g), names):

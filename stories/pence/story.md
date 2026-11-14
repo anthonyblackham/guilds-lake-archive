@@ -103,7 +103,8 @@ course of the Pence Company High Line Flume and the Pence Company Canal", drawn 
 Bottom: the same ground today, in the same frame, with the two routes traced from it: the canal from its intakes on the
 Washington County creeks, the High Line Flume (dashed), the crossing at Cornelius Pass and the long run south along the
 Linnton road to Balch Gulch, by the Scotch Nubbin. The 1905 plan had brought the water further south, by tunnels under
-Sylvan. The old map is fitted to the section corners, to within about 340 feet. City of Portland Archives,
+Sylvan. The old map is fitted to the section corners, to within about 340 feet; the traced routes are placed more
+closely, on 33 section corners from the county's survey records. City of Portland Archives,
 A2009-009.3473 (AP/21787); bottom panel made for this story, with the 1902 lake outline and the 1897 boundary of
 Macleay Park. Base map © OpenStreetMap contributors. [Catalogue entry](cat:pdx-archives-a2009-009-3473)
 :::
