@@ -318,7 +318,7 @@ claimed some 35 miles of flume on three levels across the whole works
 ([Journal, 8 Mar 1907](cat:news-oregon-journal-1907-03-08-p5-pence-filling-terminals-35-miles-flumes)); when the
 bank's receivers counted that December, they found about 12 miles of flumes, ditches and pipe in the Balch Creek plant
 and a 14-mile lumber flume from above Cornelius Gap, finished but never used because its sawmill was never built
-([Journal, 13 Dec 1907](https://oregonnews.uoregon.edu/lccn/sn85042444/1907-12-13/ed-1/seq-6/)).
+([Journal, 13 Dec 1907](cat:news-oregon-journal-1907-12-13-p6)).
 
 ::: figure ch5-route-map.jpg narrow
 **Figure {ch5-route-map}.** The spoil route. The cut face and the flumes on the hill are traced from the 11 March 1907 picture
