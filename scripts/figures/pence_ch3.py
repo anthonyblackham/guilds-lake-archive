@@ -65,10 +65,26 @@ def park_flume_map():
     gy_, gx_ = np.gradient(np.nan_to_num(today, nan=np.nanmin(today)), cell)
     sl = np.arctan(np.hypot(gx_, gy_) * 1.4)
     shade = np.clip(np.sin(0.7) * np.cos(sl) + np.cos(0.7) * np.sin(sl) * np.cos(np.radians(315) - np.arctan2(-gx_, gy_)), 0, 1)
-    fig = S.figure((Y1 - Y0) / (X1 - X0))
-    ax = fig.add_axes([0, 0, 1, 1])
+    # two panels in the same frame: the Parks sheet the flume was traced from (as georeferenced, TPS warp), and today
+    asp = (Y1 - Y0) / (X1 - X0)
+    fig = S.figure(asp * 2 + 0.02)
+    hh = asp / (asp * 2 + 0.02)
+    top = fig.add_axes([0, 1 - hh, 1, hh])
+    g_ = P / "qgis" / "georeference" / "forestry_extension_contours_russell_blythe_mosaic_warped"
+    sheet = cv2.imread(str(g_) + ".jpg")
+    sw = [float(v) for v in open(str(g_) + ".jgw").read().split()]
+    sgx, sgy = np.meshgrid(np.arange(X0, X1, cell), np.arange(Y1, Y0, -cell))
+    sheet = cv2.remap(sheet, ((sgx - sw[4]) / sw[0]).astype(np.float32), ((sgy - sw[5]) / sw[3]).astype(np.float32),
+                      cv2.INTER_LINEAR, borderValue=(228, 222, 210))[..., ::-1]
+    top.imshow(sheet, extent=(X0, X1, Y0, Y1), interpolation="bilinear")
+    top.set_xlim(X0, X1); top.set_ylim(Y0, Y1); top.set_aspect("equal"); top.axis("off")
+    top.text(X1 - 60, Y1 - 60, "c. 1909-10: the Parks Department sheet, flumes in pencil", ha="right", va="top", fontsize=9.5,
+             fontweight="bold", color=S.INK, bbox=dict(boxstyle="round,pad=0.3", fc=S.PAPER, ec="none", alpha=0.9))
+    ax = fig.add_axes([0, 0, 1, hh])
     ax.imshow(shade, cmap="gray", extent=(X0, X1, Y0, Y1), vmin=-0.55, vmax=1.15, interpolation="bilinear")
     ax.set_xlim(X0, X1); ax.set_ylim(Y0, Y1); ax.set_aspect("equal"); ax.axis("off")
+    ax.text(X0 + 1500, Y1 - 60, "Today: the flume traced from it", ha="left", va="top", fontsize=9.5,
+            fontweight="bold", color=S.INK, bbox=dict(boxstyle="round,pad=0.3", fc=S.PAPER, ec="none", alpha=0.9))
     halo = [pe.withStroke(linewidth=2.5, foreground="white")]
 
     park = shape(json.loads((T / "macleay_park_1897_2913.geojson").read_text())["features"][0]["geometry"])

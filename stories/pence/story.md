@@ -152,12 +152,14 @@ company could condemn what it needed, and that four giants were at work on Balch
 ([Oregonian, 26 Feb 1906](cat:news-oregonian-1906-02-26-p2-smashes-pence-flume-continued-pence-story)).
 
 ::: figure ch3-park-flume-map.jpg
-**Figure {ch3-park-flume-map}.** The park flume and the first attack. The flume, the headgate box at its end and the
-first workings are traced from a Parks Department sheet of about 1909-10 (contours from Russell & Blyth's survey, the
-flume pencilled in), set against the 1897 boundary of Macleay Park. The flume's intake end lies about 245 feet outside
-the park line. The dashed contours are the Scotch Nubbin before any cutting (USGS 1896); the first workings sit in the
-small valley at its foot. Made for this story from the 2019 lidar, the Parks sheet "Contours along Forestry Extension"
-(City of Portland Archives), the 1897 park boundary and the USGS 1896 Portland quadrangle.
+**Figure {ch3-park-flume-map}.** The park flume and the first attack. Top: the Parks Department sheet "Contours along
+Forestry Extension" (about 1909-10; contours from Russell & Blyth's survey), with the flumes pencilled in: the intake
+pond on Balch Creek at lower left, the "Flume" along the canyon's north wall, and the park's rectangle. Bottom: the
+same frame today, with the flume, the headgate box at its end and the first workings traced from the sheet, set against
+the 1897 boundary of Macleay Park. The flume's intake end lies about 245 feet outside the park line. The dashed contours
+are the Scotch Nubbin before any cutting (USGS 1896); the first workings sit in the small valley at its foot. City of
+Portland Archives (Parks maps); bottom panel made for this story from the 2019 lidar, the 1897 park boundary and the
+USGS 1896 Portland quadrangle. [Catalogue entry](cat:pdx-archives-forestry-extension)
 :::
 
 ::: figure ch3-broken-flume.jpg narrow
