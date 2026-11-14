@@ -1,24 +1,111 @@
 ---
 title: Lafe Pence and the Scotch Nubbin
 subtitle: How a promoter set out to wash the West Hills into Guild's Lake, 1905-1909
-status: Draft. Chapters 5-7; chapters 1-4 to come.
+status: Draft. Chapters 3 and 5-7; chapters 1, 2 and 4 to come.
 ---
+
+## 3. The flume war
+
+<p class="when">December 1905 - March 1906</p>
+
+Pence needed a way through Macleay Park. Balch Creek ran down its canyon, and the hill he meant to wash away stood just
+beyond it, behind Willamette Heights. In December 1905 he said he would ask the Mayor and the Park Board for leave to run
+a flume through the park for three years, at a rental
+([Oregonian, 18 Dec 1905](cat:news-oregonian-1905-12-18-p8-lafe-pence-buys-buildings)). The Oregonian warned that if
+he laid violent hands on the park he would have "the fight of his life"
+([Oregonian, 19 Dec 1905](cat:news-oregonian-1905-12-19-p8-editorial-fight-of-his-life)). The new mayor, Harry Lane,
+walked the ground with him and told him to get the board's consent and give bond. Pence never applied
+([Oregonian, 1 Mar 1906](cat:news-oregonian-1906-03-01-p16-mayor-lane-explains-flume)).
+
+He built it anyway. Over the winter his crews put up more than 6,000 feet of plank box flume on trestles along the north
+wall of the canyon (Figure {ch3-park-flume-map}), known, he said later, only to "a trusted few". His reasoning was that a working flume would make a
+better argument than a request, which would only be turned down
+([Oregonian, 27 Feb 1906](cat:news-oregonian-1906-02-27-p10-truce-may-end-fight-of-flume)). On Saturday 24 February
+Lane found it carrying water across city property. The next afternoon he came back with Captain Bruin and a squad of
+police carrying sledgehammers, smashed a stretch of it at the upper end of the park, and left officers to guard
+the wreck overnight (Figure {ch3-broken-flume})
+([Oregonian, 26 Feb 1906](cat:news-oregonian-1906-02-26-p1-smashes-flume-of-lafe-pence)). The upper end was where
+the flume left its intake on Balch Creek and entered the park, and later accounts say a survey found the smashed
+stretch lay just outside the park line; no report of that survey from 1906 has turned up. Pence answered that his
+company could condemn what it needed, and that four giants were at work on Balch Creek water
+([Oregonian, 26 Feb 1906](cat:news-oregonian-1906-02-26-p2-smashes-pence-flume-continued-pence-story)).
+
+::: figure ch3-park-flume-map.jpg
+**Figure {ch3-park-flume-map}.** The park flume and the first attack. The flume, the headgate box at its end and the
+first workings are traced from a Parks Department sheet of about 1909-10 (contours from Russell & Blyth's survey, the
+flume pencilled in), set against the 1897 boundary of Macleay Park. The flume's intake end lies about 245 feet outside
+the park line. The dashed contours are the Scotch Nubbin before any cutting (USGS 1896); the first workings sit in the
+small valley at its foot. Made for this story from the 2019 lidar, the Parks sheet "Contours along Forestry Extension"
+(City of Portland Archives), the 1897 park boundary and the USGS 1896 Portland quadrangle.
+:::
+
+::: figure ch3-broken-flume.jpg narrow
+**Figure {ch3-broken-flume}.** "Policemen Riley and Burke on guard at the broken flume": the open plank box on its
+trestle bents, with its sides knocked out and timbers strewn down the slope. Morning Oregonian, 27 February 1906, p. 10.
+[Catalogue entry](cat:news-oregonian-1906-02-27-p10-truce-may-end-fight-of-flume)
+:::
+
+Then it turned into a truce. On Monday Lane, the city attorney, the city engineer and a park commissioner waded the full
+length of the flume with Pence in pelting rain, Pence in rubber boots and a cowboy hat, and came out to see "the big
+hydraulic giant at work on the hillside back of Willamette Heights" (Figure {ch3-giants})
+([Oregonian, 27 Feb 1906](cat:news-oregonian-1906-02-27-p10-truce-may-end-fight-of-flume)). On Tuesday the mayor told
+the Park Board that Portland always drove its promoters off to Seattle, and the board voted two to one to let the flume
+cross the park for a year from 15 May: water only in the rainy months, a bond against damage, removal when asked, and
+no claim to the creek
+([Journal, 27 Feb 1906](cat:news-oregon-journal-1906-02-27-p1-park-board-lets-pence-build-flume)). Within 35 minutes
+water was running through the mended flume again, and the giants worked day and night
+([Oregonian, 1 Mar 1906](cat:news-oregonian-1906-03-01-p10-eating-away-the-hill-birdseye)).
+
+::: figure ch3-giants.jpg
+**Figure {ch3-giants}.** "Hydraulic giants attacking a hill on Portland Heights, near Macleay Park": the raw cut face
+at left, the sluiced floor, and two giants on their mounts (marked X). This is the Scotch Nubbin's back face, a year
+before the season described in chapter 5. Morning Oregonian, 27 February 1906, p. 10.
+[Catalogue entry](cat:news-oregonian-1906-02-27-p10-truce-may-end-fight-of-flume)
+:::
+
+The paper now explained the works with a bird's-eye drawing (Figure {ch3-birdseye}). An upper flume came round
+the head of the basin through a tunnel and dropped its water 324 feet in a pipe to one high-pressure giant, which did
+the cutting; the park flume fed two more that swept the spoil down Balch Gulch toward the lake. About 60 feet had been
+cut into the hill so far, and the plan was to turn it into three terraces for houses
+([Oregonian, 1 Mar 1906](cat:news-oregonian-1906-03-01-p10-eating-away-the-hill-birdseye)). The giants stood in the
+small valley behind the knoll and worked at its back face, where the park flume ended at a headgate and the upper flume's pipe came
+down to them (Figure {ch3-park-flume-map}). Pence invited the public
+out to watch: take the W car across the Thurman Street bridge to Rugby Street and walk up the brush road
+([Journal, 1 Mar 1906](cat:news-oregon-journal-1906-03-01-p14-pence-invites-public-hydraulic-work)). On 2 March the
+board approved the written contract, a cash bond and a railed footwalk along the top of the flume included
+([Journal, 2 Mar 1906](cat:news-oregon-journal-1906-03-02-p9-pence-at-peace-with-city-contract)). "When it comes to
+handling Park Boards," the Oregonian remarked, "Lafe Pence is right there"
+([Oregonian, 1 Mar 1906](cat:news-oregonian-1906-03-01-p8-quip-pence-handling-park-boards)).
+
+::: figure ch3-birdseye.jpg
+**Figure {ch3-birdseye}.** "Birdseye view showing scene of Lafe Pence's operations by which Guild's Lake will be
+filled with earth washed down from hills." Looking north-east down Balch Creek from Macleay Park. Stars mark the edge of
+the park; the park flume runs along the canyon wall from its intake on Balch Creek to the headgate AA; the upper flume
+comes round through a tunnel to headgate A, and the pipe line drops from there to B, the "point of attack", on the great
+dome in the middle: the Scotch Nubbin, drawn rising straight off the creek, with Willamette Heights beyond it and
+Guild's Lake and the fairgrounds behind. Morning Oregonian, 1 March 1906, p. 10.
+[Catalogue entry](cat:news-oregonian-1906-03-01-p10-eating-away-the-hill-birdseye)
+:::
+
+<div class="keynum"><span>6,000 feet</span> of flume built through a city park without permission, smashed by the
+mayor, and licensed by the Park Board two days later.</div>
 
 ## 5. Washing down the Scotch Nubbin
 
 <p class="when">Winter 1906-07</p>
 
-::: figure ch5-birdseye.jpg
-**Figure {ch5-birdseye}.** "Birdseye view showing scene of Lafe Pence's operations by which Guild's Lake will be
-filled with earth washed down from hills." Looking north-east down Balch Creek from Macleay Park: the flumes along the
-canyon, the dashed area to be sluiced, and B, the "point of attack", on the great dome in the middle, the Scotch
-Nubbin, drawn rising straight off the creek with Willamette Heights beyond it and Guild's Lake and the fairgrounds
-behind. Drawn a year before the work this chapter describes. Morning Oregonian, 1 March 1906, p. 10.
-[Catalogue entry](cat:news-oregonian-1906-03-01-p10-eating-away-the-hill-birdseye)
+::: figure ch5-flume-picture.jpg
+**Figure {ch5-flume-picture}.** "System of flumes with which Lafe Pence is sluicing down great hills and filling Guild's Lake."
+Looking north, down Balch Gulch: the cut face on the Nubbin at left, the flumes zig-zagging down the gulch
+wall, the Thurman Street bridge at right and the Government Building across the lake. The photograph is retouched
+(Mount St. Helens is drawn in). Morning Oregonian, 11 March 1907, p. 12.
+[Catalogue entry](cat:news-oregonian-1907-03-11-p12-pences-dreams-coming-true)
 :::
 
 The Scotch Nubbin was a knoll on the Willamette Heights side of Balch Gulch, about 430 feet high. What is left of it
-is the house-topped knob that stands at 374 feet today: the knoll's summit, cut down by some 55 feet. Pence started on it in November 1906. On the 27th a 400-pound
+is the house-topped knob that stands at 374 feet today: the knoll's summit, cut down by some 55 feet. It is the great dome in the 1906 drawing (Figure {ch3-birdseye}), and Pence's giants had been at its back face since
+early 1906; in November 1906 he
+went at it in earnest. On the 27th a 400-pound
 black-powder blast, set in two tunnels, rattled windows all over Willamette Heights. The residents protested, and the
 next day City Engineer Taylor revoked Pence's blasting permit
 ([Journal, 28 Nov 1906](cat:news-oregon-journal-1906-11-28-p1-taylor-revokes-pence-blasting-permit)). Pence said he
@@ -28,7 +115,7 @@ would keep washing the hill down anyway; it would only cost more
 St. Johns Review joked that its babies had slept through the blast
 ([St. Johns Review, 30 Nov 1906](cat:news-st-johns-review-1906-11-30-p3-pence-little-blast-quip)).
 
-Through the winter three hydraulic giants worked the knoll's top and south face. The spoil ran off in box flumes on
+Through the winter three hydraulic giants washed away the upper part of the knoll. The spoil ran off in box flumes on
 trestles down the north wall of the gulch, across it near Savier and 31st, past Pence's office in the old Emergency
 Hospital, through the Klondike building and out over the Trail and the Bridge of Nations: nearly a mile, to a diked fill
 behind the Government Building (Figure {ch5-route-map})
@@ -62,14 +149,6 @@ On 11 March the Oregonian printed a picture of the whole system (Figure {ch5-flu
 200,000 cubic yards washed into the lake and a 22-acre tract filling behind the Government Building, and Pence
 promised to finish the Nubbin by dry grading by August, then start on the east side of the gulch
 ([Oregonian, 11 Mar 1907](cat:news-oregonian-1907-03-11-p12-pences-dreams-coming-true)).
-
-::: figure ch5-flume-picture.jpg
-**Figure {ch5-flume-picture}.** "System of flumes with which Lafe Pence is sluicing down great hills and filling Guild's Lake."
-Looking north-east from above Balch Gulch: the cut face on the Nubbin at left, the flumes zig-zagging down the gulch
-wall, the Thurman Street bridge at right and the Government Building across the lake. The photograph is retouched
-(Mount St. Helens is drawn in). Morning Oregonian, 11 March 1907, p. 12.
-[Catalogue entry](cat:news-oregonian-1907-03-11-p12-pences-dreams-coming-true)
-:::
 
 Matched to a model of the ground before the cuts, seen from the same spot, the hill in the picture fills the same
 outline as the knoll, and the cut face is eaten into its flank, while the flumes run where the gulch wall lets them
