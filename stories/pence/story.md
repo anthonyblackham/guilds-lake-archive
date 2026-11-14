@@ -1,8 +1,55 @@
 ---
 title: Lafe Pence and the Scotch Nubbin
 subtitle: How a promoter set out to wash the West Hills into Guild's Lake, 1905-1909
-status: Draft. Chapters 2, 3 and 5-7; chapters 1 and 4 to come.
+status: Draft. All seven chapters, for review.
 ---
+
+## 1. The promoter
+
+<p class="when">1857-1904</p>
+
+::: figure ch1-portrait.jpg small
+**Figure {ch1-portrait}.** "Hon. Lafe Pence", from the Sigma Chi fraternity's quarterly; the "Hon." dates it to his
+years in Congress or soon after. The Sigma Chi Quarterly, vol. 12, p. 123.
+[Catalogue entry](cat:sigma-chi-quarterly-v12-pence-portrait)
+:::
+
+Lafayette Pence (Figure {ch1-portrait}) was born in Columbus, Indiana, in December 1857. He went west as a lawyer, settled in Denver in 1885,
+and moved quickly through Colorado politics: the state House of Representatives, then two years as prosecutor for
+Arapahoe County. In 1892 he rode the Populist wave into Congress, and he sat for one term, from March 1893 to March
+1895, before losing his seat. After that came a string of ventures: railroads in New York, a law practice in
+Washington, and hydraulic mining at Breckenridge, Colorado, the same method, giants washing down gravel banks, that he
+would bring to Portland (Biographical Directory of the U.S. Congress).
+
+By 1904 he was a promoter at large in the Northwest. In February he was among the incorporators of a canal company at
+Ontario, in eastern Oregon
+([Oregonian, 7 Feb 1904](cat:news-sunday-oregonian-1904-02-07-p7-pence-ontario-canal)); by summer, "of Colorado", he
+was offering Lewiston, Idaho, a gravity water system from the Sweetwater country
+([Journal, 1 Aug 1904](cat:news-oregon-journal-1904-08-01-p6-pence-lewiston)). He left a trail of small debts behind
+him: a hotel in Salt Lake City cashed his $90 draft on Lewiston, and it came back marked "no funds"
+([Journal, 27 Aug 1904](cat:news-oregon-journal-1904-08-27-p1-pence-warrant-utah-angry)).
+
+Portland met him in August 1904, at the American Mining Congress. Speaking for Denver against Salt Lake City as the
+congress's permanent home, he told the delegates it should be "a mining bureau and not a matrimonial bureau", a jibe at
+the Mormons that set off an uproar
+([Oregonian, 26 Aug 1904](cat:news-oregonian-1904-08-26-p1-pence-mining-congress-stir)). The Utah delegates demanded an
+apology, Idaho's leaders, W. E. Borah among them, wired that he did not speak for Idaho
+([Journal, 26 Aug 1904](cat:news-oregon-journal-1904-08-26-p2-pence-mining-congress-uproar)), and Denver won the vote
+anyway ([Journal, 26 Aug 1904](cat:news-oregon-journal-1904-08-26-p1-denver-wins-mining-congress)). The next day Salt
+Lake issued a warrant against him over the $90 draft, and a Utah judge called him "a soldier of fortune"
+([Journal, 27 Aug 1904](cat:news-oregon-journal-1904-08-27-p1-pence-warrant-utah-angry)). Pence said he had drawn the
+draft on himself, expecting money from his Lewiston deals, and would pay
+([Journal, 28 Aug 1904](cat:news-oregon-journal-1904-08-28-p3-pence-explains-salt-lake-debt)); he went to Salt Lake to
+face what he called "the rawest sort of spitework"
+([Oregonian, 30 Aug 1904](cat:news-oregonian-1904-08-30-p7-pence-goes-to-salt-lake)).
+
+Within weeks he was back at the Portland hotel, saying he had given up politics for business and urging the city to
+court the Lewiston country ([Oregonian, 15 Sep 1904](cat:news-oregonian-1904-09-15-p5-pence-idaho-tributary)). The
+Lewis and Clark Exposition was going up on the shore of Guild's Lake, and the hills behind it were full of water and
+gravel.
+
+<div class="keynum"><span>One term</span> in Congress, 1893-95; then ten years of railroads, mining and water schemes
+before Portland.</div>
 
 ## 2. The big idea
 
@@ -162,6 +209,77 @@ Guild's Lake and the fairgrounds behind. Morning Oregonian, 1 March 1906, p. 10.
 
 <div class="keynum"><span>6,000 feet</span> of flume built through a city park without permission, smashed by the
 mayor, and licensed by the Park Board two days later.</div>
+
+## 4. The fair, bought for scrap
+
+<p class="when">December 1905 - 1906</p>
+
+When the exposition closed, its state buildings were sold off for whatever they would bring, and Pence bought most of
+them. In mid-December he moved his company's offices into the fair's Emergency Hospital and announced that, for Eastern
+capitalists, he was buying the State Commission's buildings to wreck them for flume lumber
+([Oregonian, 18 Dec 1905](cat:news-oregonian-1905-12-18-p8-lafe-pence-buys-buildings)). On 28 December he paid the
+last instalment: $2,725 for the Agricultural, Oriental, Oregon State and Auditorium buildings, the fire station, the
+police headquarters and the Colonnade
+([Oregonian, 29 Dec 1905](cat:news-oregonian-1905-12-29-p11-pence-pays-final-installment)). The California and
+Washington buildings followed at a few hundred dollars each
+([Oregonian, 30 Dec 1905](cat:news-oregonian-1905-12-30-p10-lafe-pence-buyer)). The Journal worked out that the
+Commission's buildings had cost $290,000 to put up and had been sold for $5,525
+([Journal, 31 Dec 1905](cat:news-oregon-journal-1905-12-31-p12-buildings-cost-290000-sold-5525)) (Figure
+{ch4-buildings-map}).
+
+::: figure ch4-buildings-map.jpg
+**Figure {ch4-buildings-map}.** The fair, bought for scrap. Coloured: the buildings Pence bought in December 1905 from
+the State Commission and others, and the Government Building and its annexes on the peninsula, bought in May 1906; the
+Emergency Hospital, his office, is outlined. Grey: the rest of the fair. The labels for the Cottel tract and the fill
+behind the Government Building show roughly where the papers put them; neither is mapped from a survey. Made for this
+story from the 1905 Sanborn map's building footprints and the 1902-03 surveys of the grounds.
+:::
+
+He settled in as lord of the empty fair. In January he and Mrs. Pence moved into the rooms Governor Pardee had used in
+the California building, with his flume crew lodged in the hospital, all on behalf of a new Lewis and Clark Wrecking
+Company ([Oregonian, 22 Jan 1906](cat:news-oregonian-1906-01-22-p13-pences-dwell-in-california-building)). He fenced
+the grounds against fire, then let Sunday visitors back in under police guard
+([Oregonian, 5 Feb 1906](cat:news-oregonian-1906-02-05-p8-wreck-of-the-fair-sunday-visitors)). Wrecking began in
+earnest in March, and the big timbers were to go into his flumes
+([Oregonian, 15 Mar 1906](cat:news-oregonian-1906-03-15-p12-wrecking-work-is-begun)).
+
+The land was the real prize. In January he was negotiating for about 80 acres of the Cottle estate, part of it under
+Guild's Lake, to fill with the spoil of the hills he had contracts to level
+([Oregonian, 16 Jan 1906](cat:news-oregonian-1906-01-16-p11-pence-would-fill-part-of-lake-cottle)). In February,
+through the Portland Trust Co., the Fleischner, Hirsch, Goldsmith and Mayer tracts of the fairground went for some
+$390,000, reportedly for a railroad terminal
+([Journal, 10 Feb 1906](cat:news-oregon-journal-1906-02-10-p6-pence-buys-fairground-tracts)), and in March it came out
+that John S. McMillin of Seattle, through his Portland Development Co., had bought about 70 acres and twelve fair
+buildings to turn into factories: a project, the Oregonian said, "engineered by Mr. Lafe Pence"
+([Oregonian, 25 Mar 1906](cat:news-sunday-oregonian-1906-03-25-p1-fair-site-sold-for-factories-mcmillin);
+[Oregonian, 25 Mar 1906](cat:news-sunday-oregonian-1906-03-25-p6-editorial-white-citys-future)). Pence said McMillin was
+an old college friend from Indiana.
+
+::: figure ch4-perspective-1906.jpg
+**Figure {ch4-perspective-1906}.** "Perspective map showing route of Lafe Pence's electric line from Lewis and Clark
+Exposition grounds to Linnton": the fairgrounds marked as the "factory and mill district" and a "residence district of
+North Portland", Guild's Lake, Willamette Heights, and the line running north along the St. Helens road to Linnton.
+Morning Oregonian, 4 May 1906, p. 11.
+[Catalogue entry](cat:news-oregonian-1906-05-04-p11-perspective-map-pence-electric-line-linnton)
+:::
+
+By spring the plan had grown into a whole district. The County Court gave the Pence Co. a franchise for an electric
+line from the fairgrounds to Linnton (Figure {ch4-perspective-1906})
+([Oregonian, 4 May 1906](cat:news-oregonian-1906-05-04-p11-perspective-map-pence-electric-line-linnton)). On 22 May
+he bought the Government Building and its annexes on the peninsula for $3,000, and arranged with the Reed estate, which
+owned the ground, to fill the peninsula in return for the use of the land
+([Oregonian, 23 May 1906](cat:news-oregonian-1906-05-23-p12-pence-buys-government-building)); a day later he was
+offering the building to a condensed-milk company
+([Oregonian, 24 May 1906](cat:news-oregonian-1906-05-24-p10-condensed-milk-factory-government-building)). In the
+Made in Oregon parade the Portland Development Co.'s float showed the fair buildings as factories, with busts of
+McMillin and Pence ([Oregonian, 25 May 1906](cat:news-oregonian-1906-05-25-p10-made-in-oregon-parade-pence-float)).
+By the autumn the buildings belonged to McMillin's company
+([Oregonian, 8 Oct 1906](cat:news-oregonian-1906-10-08-p14-pence-returns-flume-for-orn-ties)), and Pence's part of
+the fair was the ground he meant to make: the Cottel tract and the fill behind the Government Building, both waiting
+on the hill.
+
+<div class="keynum"><span>$5,525</span> for state buildings that had cost $290,000; $3,000 more for the Government
+Building.</div>
 
 ## 5. Washing down the Scotch Nubbin
 

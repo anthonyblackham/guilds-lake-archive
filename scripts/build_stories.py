@@ -5,7 +5,7 @@ r"""Build the story pages: stories/<story>/story.md -> stories/<story>/index.htm
 story.md conventions
 - front matter (--- ... ---) with title, subtitle, status
 - citations: [text](cat:<catalogue id>) link to the source's entry on the index site
-- figures:   ::: figure <file in figures/> [narrow]
+- figures:   ::: figure <file in figures/> [narrow | small]   (small = portraits, ~360 px wide)
              caption (markdown) ...
              :::
 - figure references: {ch5-route-map} (the figure's file name without .jpg) becomes its number, e.g. 5.1;
@@ -50,7 +50,7 @@ def build(folder):
             raise SystemExit(f"missing figure file {name}")
         caption = markdown.markdown(cap.strip())[3:-4]  # strip <p></p>
         slug = name.rsplit(".", 1)[0]
-        cls = "fig narrow" if "narrow" in opts else "fig"
+        cls = "fig small" if "small" in opts else ("fig narrow" if "narrow" in opts else "fig")
         return (f'\n<figure class="{cls}" id="fig-{slug}"><a href="figures/{name}"><img loading="lazy" '
                 f'src="figures/{name}" alt=""></a><figcaption>{caption}</figcaption></figure>\n')
 
