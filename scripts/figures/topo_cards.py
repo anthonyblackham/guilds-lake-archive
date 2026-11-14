@@ -69,6 +69,7 @@ ANCHOR = {   # where each overview title sits (EPSG:2913 ft): on the main body o
     "usgs_1896": (7634103, 688716), "forestry_ext_c1910": (7633019, 687679), "m1698_1906": (7634716, 687396),
     "m1697_westover": (7636178, 686972),
 }
+TURN = {"m1697_westover"}   # sheets photographed on their side: panels turned 90 degrees clockwise so north is up
 SURFACES = {   # survey_id: [(dem, shift to the city datum), ...] first with data wins; else today's lidar
     "usgs_1896": [("nubbin_1896_dem", 0.0)],
     "huber_1902": [("combined_dem", 0.0)],
@@ -152,11 +153,21 @@ def card(sid, footprint):
     m = 0.04 * max(c1 - c0, r1 - r0)
     w, h = Image.open(img).size
     c0, r0, c1, r1 = max(0, c0 - m), max(0, r0 - m), min(w, c1 + m), min(h, r1 + m)
-    s = PW / (c1 - c0)
-    PH = int(round((r1 - r0) * s))
+    turn = sid in TURN
+    s = PW / ((r1 - r0) if turn else (c1 - c0))
+    PH = int(round(((c1 - c0) if turn else (r1 - r0)) * s))
+
+    def to_uv(cr):                                           # sheet (col, row) -> panel (u, v)
+        if turn:                                             # turned clockwise: the sheet's top edge becomes the right
+            return np.c_[(r1 - cr[:, 1]) * s, (cr[:, 0] - c0) * s]
+        return (cr - (c0, r0)) * s
+
     # 1. the sheet as printed
     a = cv2.imread(str(img), cv2.IMREAD_COLOR)
-    sheet = cv2.resize(a[int(r0):int(r1), int(c0):int(c1)], (PW, PH), interpolation=cv2.INTER_AREA)[..., ::-1] / 255
+    a = a[int(r0):int(r1), int(c0):int(c1)]
+    if turn:
+        a = cv2.rotate(a, cv2.ROTATE_90_CLOCKWISE)
+    sheet = cv2.resize(a, (PW, PH), interpolation=cv2.INTER_AREA)[..., ::-1] / 255
     del a
     jpg(OUT / f"{sid}-original.jpg", sheet)
     # 2. the traced lines coloured by height, drawn in sheet pixels over the sheet faded into the dark ground
@@ -168,7 +179,7 @@ def card(sid, footprint):
     for q, e in feats:
         col = CMAP(norm(e)) if np.isfinite(e) else (0.6, 0.6, 0.6, 1)
         for part in getattr(q, "geoms", [q]):
-            uv = (np.asarray(part.coords) @ Ai[:, :2].T + Ai[:, 2] - (c0, r0)) * s
+            uv = to_uv(np.asarray(part.coords) @ Ai[:, :2].T + Ai[:, 2])
             if part.geom_type == "Point":
                 ax.plot(uv[:, 0], uv[:, 1], ".", color=col, ms=3 * lw)
             else:
@@ -184,14 +195,14 @@ def card(sid, footprint):
     # 3. the reconstructed ground in the same frame: rainbow by height, shaded relief lit from the panel's upper left,
     #    only inside the survey's footprint
     jj, ii = np.meshgrid(np.arange(PW) + 0.5, np.arange(PH) + 0.5)
-    cc, rr = c0 + jj / s, r0 + ii / s
+    cc, rr = (c0 + ii / s, r1 - jj / s) if turn else (c0 + jj / s, r0 + ii / s)
     gx = (A[0, 0] * cc + A[0, 1] * rr + A[0, 2]).astype(np.float32)
     gy = (A[1, 0] * cc + A[1, 1] * rr + A[1, 2]).astype(np.float32)
     z = np.full(gx.shape, np.nan, np.float32)
     for name, dz in SURFACES[sid]:
         z = np.where(np.isfinite(z), z, sample(name, gx, gy) - dz)
     mk = np.zeros((PH, PW), np.uint8)
-    ring = (np.asarray(footprint.exterior.coords) @ Ai[:, :2].T + Ai[:, 2] - (c0, r0)) * s
+    ring = to_uv(np.asarray(footprint.exterior.coords) @ Ai[:, :2].T + Ai[:, 2])
     cv2.fillPoly(mk, [ring.round().astype(np.int32)], 1)
     inside = np.isfinite(z) & (mk > 0)
     zf = np.where(np.isfinite(z), z, np.nanmedian(z))
