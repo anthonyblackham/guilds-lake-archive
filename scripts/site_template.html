@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Guild's Lake Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+:root {
+  --bg: #f4efe4; --panel: #fbf8f1; --ink: #2a241c; --muted: #6d6354; --rule: #d9cfbd;
+  --accent: #2f5f62; --accent-ink: #f4efe4; --chip: #e9e1d1; --shade: #e4dccb; --badge: #8a5a2b;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1b1915; --panel: #24211c; --ink: #ece4d4; --muted: #a89c88; --rule: #3a352c;
+  --accent: #7fb3b0; --accent-ink: #1b1915; --chip: #312d26; --shade: #2c2822; --badge: #d9a26a; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #1b1915; --panel: #24211c; --ink: #ece4d4; --muted: #a89c88; --rule: #3a352c;
+  --accent: #7fb3b0; --accent-ink: #1b1915; --chip: #312d26; --shade: #2c2822; --badge: #d9a26a; color-scheme: dark }
+* { box-sizing: border-box }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--sans) }
+a { color: var(--accent) }
+.wrap { max-width: 1400px; margin: 0 auto; padding-block: 0 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+header { border-bottom: 1px solid var(--rule); padding-block: 28px 18px; display: flex; flex-wrap: wrap; gap: 8px 32px; align-items: end }
+header h1 { font: 600 clamp(28px, 4vw, 40px)/1.1 var(--serif); margin: 0; letter-spacing: -0.01em }
+header p { margin: 0; color: var(--muted); max-width: 70ch; flex: 1 1 380px }
+.bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding-block: 16px; position: sticky; top: 0;
+  background: var(--bg); z-index: 5; border-bottom: 1px solid var(--rule) }
+.bar input[type=search] { flex: 1 1 280px; font: inherit; padding: 9px 12px; border: 1px solid var(--rule); border-radius: 6px;
+  background: var(--panel); color: var(--ink) }
+.bar select, .bar button { font: inherit; padding: 8px 10px; border: 1px solid var(--rule); border-radius: 6px; background: var(--panel); color: var(--ink) }
+.count { color: var(--muted); font-size: 13px; margin-left: auto; white-space: nowrap }
+.layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 28px; padding-top: 20px }
+aside h2 { font: 600 11px/1 var(--sans); text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); margin: 18px 0 8px }
+aside h2:first-child { margin-top: 0 }
+.facet label { display: flex; gap: 8px; align-items: baseline; padding: 2px 0; cursor: pointer; font-size: 14px }
+.facet label span.n { margin-left: auto; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums }
+.facet input { accent-color: var(--accent) }
+.decades { display: flex; flex-wrap: wrap; gap: 6px }
+.decades button { font: 13px var(--sans); padding: 3px 8px; border-radius: 999px; border: 1px solid var(--rule); background: var(--chip); color: var(--ink); cursor: pointer }
+.decades button[aria-pressed=true] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent) }
+.decades button small { color: inherit; opacity: 0.7 }
+.clear { margin-top: 18px; font-size: 13px; background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0; text-decoration: underline }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 18px }
+.card { background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; cursor: pointer;
+  display: flex; flex-direction: column; text-align: left; padding: 0; font: inherit; color: inherit }
+.card:hover, .card:focus-visible { border-color: var(--accent); outline: none }
+.thumb { aspect-ratio: 4 / 3; max-width: 100%; background: var(--shade); display: grid; place-items: center; overflow: hidden }
+.thumb img { width: 100%; height: 100%; object-fit: cover }
+.thumb .none { font: 12px/1.4 var(--sans); color: var(--muted); text-align: center; padding: 12px }
+.thumb .none b { display: block; font: 600 11px var(--sans); letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 4px; color: var(--badge) }
+.meta { padding: 10px 12px 12px; display: grid; gap: 4px; min-width: 0 }
+.meta .t { font: 15px/1.3 var(--serif); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-wrap: balance }
+.meta .s { font-size: 12px; color: var(--muted) }
+.kind { font: 600 10px var(--sans); text-transform: uppercase; letter-spacing: 0.09em; color: var(--badge) }
+.more { display: block; margin: 28px auto 0; font: inherit; padding: 10px 22px; border-radius: 6px; border: 1px solid var(--accent); background: none; color: var(--accent); cursor: pointer }
+.empty { color: var(--muted); padding: 40px 0 }
+dialog { border: 1px solid var(--rule); border-radius: 10px; background: var(--panel); color: var(--ink); padding: 0; width: min(980px, calc(100vw - 32px)); max-height: calc(100vh - 32px) }
+dialog::backdrop { background: rgba(20, 16, 10, 0.55) }
+.detail { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 0 }
+.detail .img { background: var(--shade); display: grid; place-items: center; min-height: 260px }
+.detail .img img { max-width: 100%; max-height: 72vh; object-fit: contain }
+.detail .txt { padding: 22px 24px; display: grid; gap: 12px; align-content: start; min-width: 0 }
+.detail h2 { font: 600 22px/1.25 var(--serif); margin: 0; text-wrap: balance }
+.detail dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 14px; margin: 0; font-size: 14px }
+.detail dt { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em; padding-top: 2px }
+.detail dd { margin: 0; overflow-wrap: anywhere }
+.detail .desc { font: 15px/1.55 var(--serif); margin: 0 }
+.detail .go { display: inline-block; background: var(--accent); color: var(--accent-ink); text-decoration: none; padding: 9px 16px; border-radius: 6px; font-weight: 500; justify-self: start }
+.detail .credit { font-size: 12px; color: var(--muted) }
+.mono { font-family: var(--mono); font-size: 12.5px }
+.close { position: absolute; top: 8px; right: 10px; border: 0; background: var(--panel); color: var(--ink); font-size: 22px; line-height: 1; width: 34px; height: 34px; border-radius: 50%; cursor: pointer }
+.filters-toggle { display: none }
+@media (max-width: 760px) {
+  .layout { grid-template-columns: minmax(0, 1fr) }
+  aside { display: none } aside.open { display: block }
+  .filters-toggle { display: inline-block }
+  .detail { grid-template-columns: minmax(0, 1fr) }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Guild's Lake Archive</h1>
+    <p>Sources for Guild's Lake, the 1905 Lewis and Clark Exposition grounds, and their subsequent development.
+      Each entry links to the archive that holds the original.</p>
+  </header>
+  <div class="bar">
+    <input type="search" id="q" placeholder="Search titles, descriptions, people, call numbers" aria-label="Search">
+    <select id="sort" aria-label="Sort">
+      <option value="date">Oldest first</option>
+      <option value="-date">Newest first</option>
+      <option value="title">Title A-Z</option>
+    </select>
+    <button class="filters-toggle" id="ft" type="button">Filters</button>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="layout">
+    <aside id="aside">
+      <h2>Held by</h2><div class="facet" id="f-holder"></div>
+      <h2>Kind</h2><div class="facet" id="f-kind"></div>
+      <h2>Decade</h2><div class="decades" id="f-decade"></div>
+      <h2>Preview</h2><div class="facet" id="f-thumb"></div>
+      <button class="clear" id="clear" type="button">Clear all filters</button>
+    </aside>
+    <main>
+      <div class="grid" id="grid"></div>
+      <p class="empty" id="empty" hidden>Nothing matches. Try fewer filters.</p>
+      <button class="more" id="more" type="button" hidden>Show more</button>
+    </main>
+  </div>
+</div>
+<dialog id="dlg" aria-label="Source details"><button class="close" id="x" type="button" aria-label="Close">&times;</button><div id="dbody"></div></dialog>
+<script>
+const DATA = /*CATALOG*/[];
+const PAGE = 96;
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const state = {q: "", holder: new Set(), kind: new Set(), decade: new Set(), thumb: new Set(), sort: "date", shown: PAGE};
+DATA.forEach((d) => {
+  d._dec = d.year ? String(Math.floor(d.year / 10) * 10) + "s" : "Undated";
+  d._thumb = d.thumb ? "With preview" : "Link only";
+  d._hay = [d.title, d.description, d.creator, d.archive_id, d.collection, d.place, d.date, d.id].join(" ").toLowerCase();
+});
+function facetKeys(field) {
+  const c = new Map();
+  DATA.forEach((d) => c.set(d[field], (c.get(d[field]) || 0) + 1));
+  return [...c.entries()];
+}
+function match(d, skip) {
+  if (state.q && !state.q.split(/\s+/).every((w) => d._hay.includes(w))) return false;
+  if (skip !== "holder" && state.holder.size && !state.holder.has(d.holder)) return false;
+  if (skip !== "kind" && state.kind.size && !state.kind.has(d.kind)) return false;
+  if (skip !== "decade" && state.decade.size && !state.decade.has(d._dec)) return false;
+  if (skip !== "thumb" && state.thumb.size && !state.thumb.has(d._thumb)) return false;
+  return true;
+}
+function renderFacet(el, key, field, entries) {
+  const counts = new Map();
+  DATA.forEach((d) => { if (match(d, key)) counts.set(d[field], (counts.get(d[field]) || 0) + 1); });
+  el.innerHTML = entries.map(([v]) => `<label><input type="checkbox" value="${esc(v)}" ${state[key].has(v) ? "checked" : ""}>
+    <span>${esc(v || "unspecified")}</span><span class="n">${counts.get(v) || 0}</span></label>`).join("");
+  el.onchange = (e) => { const v = e.target.value; state[key].has(v) ? state[key].delete(v) : state[key].add(v); state.shown = PAGE; render(); };
+}
+function renderDecades(entries) {
+  const counts = new Map();
+  DATA.forEach((d) => { if (match(d, "decade")) counts.set(d._dec, (counts.get(d._dec) || 0) + 1); });
+  $("f-decade").innerHTML = entries.map(([v]) => `<button type="button" aria-pressed="${state.decade.has(v)}" data-v="${esc(v)}">${esc(v)} <small>${counts.get(v) || 0}</small></button>`).join("");
+}
+$("f-decade").onclick = (e) => { const b = e.target.closest("button"); if (!b) return; const v = b.dataset.v;
+  state.decade.has(v) ? state.decade.delete(v) : state.decade.add(v); state.shown = PAGE; render(); };
+const H = facetKeys("holder").sort((a, b) => b[1] - a[1]);
+const K = facetKeys("kind").sort((a, b) => b[1] - a[1]);
+const DEC = facetKeys("_dec").sort((a, b) => (a[0] === "Undated") - (b[0] === "Undated") || a[0].localeCompare(b[0]));
+const T = [["With preview"], ["Link only"]];
+function sorted(list) {
+  const s = state.sort, k = (d) => d.sk || "9999";
+  if (s === "title") return list.sort((a, b) => a.title.localeCompare(b.title));
+  list.sort((a, b) => k(a).localeCompare(k(b)) || a.title.localeCompare(b.title));
+  return s === "-date" ? list.reverse() : list;
+}
+function card(d) {
+  const img = d.thumb ? `<img loading="lazy" src="${esc(d.thumb)}" alt="">`
+    : `<div class="none"><b>${esc(d.kind || "item")}</b>${d.rights === "permission" ? "Preview not published" : "No preview"}<br>see ${esc(d.holder)}</div>`;
+  return `<button class="card" type="button" data-id="${esc(d.id)}"><div class="thumb">${img}</div>
+    <div class="meta"><span class="kind">${esc(d.kind || "")}</span><span class="t">${esc(d.title)}</span>
+    <span class="s">${esc(d.date || "undated")} · ${esc(d.holder)}</span></div></button>`;
+}
+function render() {
+  renderFacet($("f-holder"), "holder", "holder", H);
+  renderFacet($("f-kind"), "kind", "kind", K);
+  renderFacet($("f-thumb"), "thumb", "_thumb", T);
+  renderDecades(DEC);
+  const list = sorted(DATA.filter((d) => match(d)));
+  $("grid").innerHTML = list.slice(0, state.shown).map(card).join("");
+  $("count").textContent = `${list.length.toLocaleString()} of ${DATA.length.toLocaleString()} sources`;
+  $("empty").hidden = list.length > 0;
+  $("more").hidden = list.length <= state.shown;
+}
+function row(label, v, cls) { return v ? `<dt>${label}</dt><dd${cls ? ` class="${cls}"` : ""}>${esc(v)}</dd>` : ""; }
+function open(id) {
+  const d = DATA.find((x) => x.id === id);
+  if (!d) return;
+  const img = d.thumb ? `<img src="${esc(d.thumb)}" alt="${esc(d.title)}">` : `<div class="none" style="padding:30px;color:var(--muted)">No preview published for this item.</div>`;
+  $("dbody").innerHTML = `<div class="detail"><div class="img">${img}</div><div class="txt">
+    <span class="kind">${esc(d.kind || "")}</span><h2>${esc(d.title)}</h2>
+    ${d.description ? `<p class="desc">${esc(d.description)}</p>` : ""}
+    <dl>${row("Date", d.date)}${row("Creator", d.creator)}${row("Held by", d.holder)}${row("Collection", d.collection)}
+      ${row("Call no.", d.archive_id, "mono")}${row("Place", d.place)}${row("Notes", d.notes_ref, "mono")}${row("ID", d.id, "mono")}</dl>
+    ${d.url_original ? `<a class="go" href="${esc(d.url_original)}" target="_blank" rel="noopener">View at ${esc(d.holder)} &rarr;</a>` : `<span class="credit">No online copy linked yet.</span>`}
+    ${d.url_mirror ? `<a href="${esc(d.url_mirror)}" target="_blank" rel="noopener">Mirror copy</a>` : ""}
+    ${d.credit ? `<span class="credit">Credit: ${esc(d.credit)}</span>` : ""}</div></div>`;
+  if (!$("dlg").open) $("dlg").showModal();
+  if (location.hash.slice(1) !== id) history.replaceState(null, "", "#" + id);
+}
+$("grid").onclick = (e) => { const c = e.target.closest(".card"); if (c) open(c.dataset.id); };
+$("x").onclick = () => $("dlg").close();
+$("dlg").onclick = (e) => { if (e.target === $("dlg")) $("dlg").close(); };
+$("dlg").onclose = () => history.replaceState(null, "", location.pathname + location.search);
+let t;
+$("q").oninput = (e) => { clearTimeout(t); t = setTimeout(() => { state.q = e.target.value.trim().toLowerCase(); state.shown = PAGE; render(); }, 150); };
+$("sort").onchange = (e) => { state.sort = e.target.value; render(); };
+$("more").onclick = () => { state.shown += PAGE; render(); };
+$("ft").onclick = () => $("aside").classList.toggle("open");
+$("clear").onclick = () => { ["holder", "kind", "decade", "thumb"].forEach((k) => state[k].clear()); state.q = ""; $("q").value = ""; state.shown = PAGE; render(); };
+render();
+if (location.hash.length > 1) open(decodeURIComponent(location.hash.slice(1)));
+window.addEventListener("hashchange", () => { if (location.hash.length > 1) open(decodeURIComponent(location.hash.slice(1))); });
+</script>
+</body>
+</html>
