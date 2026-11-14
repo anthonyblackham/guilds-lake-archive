@@ -43,6 +43,8 @@ def write(img, name):
 
 def scans():
     news = P / "sources" / "newspapers"
+    bird = cv2.imread(str(news / "oregonian_1906-03-01_p10_eating-away-the-hill-birdseye_drawing.jpg"))
+    write(fit(bird[95:1078, 15:2400]), "ch5-birdseye.jpg")     # the drawing's dotted frame, without the column text
     write(fit(cv2.imread(str(news / "oregonian_1907-03-11_p12_pence-flumes-illustration.jpg"))), "ch5-flume-picture.jpg")
     write(fit(cv2.imread(str(news / "oregonian_1907-02-16_p10_balchs-gulch-trestle-collapse_photo.jpg")), 1200),
           "ch5-trestle-collapse.jpg")

@@ -1,12 +1,21 @@
 ---
 title: Lafe Pence and the Scotch Nubbin
 subtitle: How a promoter set out to wash the West Hills into Guild's Lake, 1905-1909
-status: Draft. Chapter 5 only; chapters 1-4, 6 and 7 to come.
+status: Draft. Chapters 5 and 6; chapters 1-4 and 7 to come.
 ---
 
 ## 5. Washing down the Scotch Nubbin
 
 <p class="when">Winter 1906-07</p>
+
+::: figure ch5-birdseye.jpg
+**Figure {ch5-birdseye}.** "Birdseye view showing scene of Lafe Pence's operations by which Guild's Lake will be
+filled with earth washed down from hills." Looking north-east down Balch Creek from Macleay Park: the flumes along the
+canyon, the dashed area to be sluiced, and B, the "point of attack", on the great dome in the middle, the Scotch
+Nubbin, drawn rising straight off the creek with Willamette Heights beyond it and Guild's Lake and the fairgrounds
+behind. Drawn a year before the work this chapter describes. Morning Oregonian, 1 March 1906, p. 10.
+[Catalogue entry](cat:news-oregonian-1906-03-01-p10-eating-away-the-hill-birdseye)
+:::
 
 The Scotch Nubbin was a knoll on the Willamette Heights side of Balch Gulch, about 430 feet high. What is left of it
 is the house-topped knob that stands at 374 feet today: the knoll's summit, cut down by some 55 feet. Pence started on it in November 1906. On the 27th a 400-pound
@@ -87,3 +96,74 @@ by late June the shovels were on the hill and the hydraulic work had stopped
 
 <div class="keynum"><span>About 200,000 cu yd</span> washed into Guild's Lake that winter, out of roughly 470,000 the
 knoll has lost in all (estimated from the model). One man killed.</div>
+
+## 6. The shovels, and the money runs out
+
+<p class="when">1907-1909</p>
+
+The steam shovels finished what the giants had started. McCabe's contract was to move 275,000 cubic yards, and the
+spoil was to level Russell & Blyth's own lots within 600 or 700 feet of the hill, not to go to the lake
+([Oregonian, 9 May 1907](cat:news-oregonian-1907-05-09-p12-russell-blyth-steam-shovel-scotch-nubbin-blyt)). The
+hydraulic work had been given up because the ground was too hard to wash
+([Oregonian, 23 Jun 1907](cat:news-sunday-oregonian-1907-06-23-s3-p32-scotch-nubbin-steam-shovels)). By then the giants
+had already taken some 40 feet off the top: the hill's outline in the March picture sits no higher than about 391 feet,
+against roughly 429 on the 1896 survey. The shovels took the summit down to today's 374 feet and cut back its west side
+(Figure {ch6-knoll-section}).
+
+::: figure ch6-knoll-section.jpg
+**Figure {ch6-knoll-section}.** A west-east section through the Scotch Nubbin. Dashed: the knoll before any cutting,
+from the 1896 USGS survey. Shaded band: where the ground could have stood in March 1907, between today's surface and
+the highest it can be given the hill's outline in the 11 March picture. Solid: today. Made for this story from the
+USGS 1896 Portland quadrangle (Olmsted job #2640 plan 6), the picture's solved camera and the 2019 lidar.
+:::
+
+Pence's own trouble was money. In May the Park Board asked him to show why his Macleay Park flume permit should not be
+revoked, citing damage and dying ferns
+([Oregonian, 4 May 1907](cat:news-oregonian-1907-05-04-p12-park-board-flumes-not-wanted)); he asked to keep the
+flumes another year, admitting a dam had broken in the winter
+([Oregonian, 9 Jun 1907](cat:news-sunday-oregonian-1907-06-09-p8-pence-asks-flumes-stay-macleay-another-)). That
+summer he still talked of buying the whole fairground for $300,000 and of filling 22 acres round the Government
+Building the next winter
+([Oregonian, 4 Aug 1907](cat:news-sunday-oregonian-1907-08-04-p8-pence-option-fair-grounds-300000)), and then turned
+to selling firewood to break the wood trust
+([Journal, 20 Aug 1907](cat:news-oregon-journal-1907-08-20-p1-pence-timber-cord-wood-trust)), a deal the unions
+said he never delivered
+([Labor Press, 23 Sep 1907](cat:news-portland-labor-press-1907-09-23-p1-pence-cannot-connect-wood)).
+
+Then the banks went (Figure {ch6-money-timeline}). Oregon Trust & Savings failed in August 1907, the first Portland failure of that year's panic;
+its receiver found Pence owing $8,716 on 1905 loans secured by his Willamette Heights hydraulic plant
+([Oregonian, 18 Sep 1907](cat:news-oregonian-1907-09-18-p14-devlin-receiver-report-oregon-trust-pence-not)). Among
+the depositors was Purdin's widow, who lost nearly $1,000
+([Hillsboro Argus, 29 Aug 1907](cat:news-hillsboro-argus-1907-08-29-p1-purdin-widow-loses-savings-oregon-trust)).
+On 28 October Title Guarantee & Trust, Pence's main lender, closed its doors. The Oregonian put the failure of his
+fairground schemes first among the causes: $225,000 lent to him and $175,000 more sunk in land
+([Oregonian, 7 Nov 1907](cat:news-oregonian-1907-11-07-p10-title-guarantee-receiver-pence-loans)). Pence answered that
+his company owed the bank nothing, its debt being to the bank's subsidiary, the Colonial Investment Co.
+([Oregonian, 8 Nov 1907](cat:news-oregonian-1907-11-08-p10-pence-does-not-owe-wrecked-bank)). The paper asked how he
+had got "a credit of a quarter of a million" in the first place
+([Oregonian, 26 Nov 1907](cat:news-oregonian-1907-11-26-p8-editorial-all-should-understand-it-pence-credi)), and the
+bonding company's controller put it plainly: the people's savings "were flushed into the side of a hill to fill up
+fair grounds" ([Oregonian, 9 Dec 1907](cat:news-oregonian-1907-12-09-p9-surety-lafrentz-pence-loans-hillside)).
+
+::: figure ch6-money-timeline.jpg
+**Figure {ch6-money-timeline}.** The money, 1905-1909: what the banks and the papers said Pence's companies owed, and
+when the two banks behind him failed. Figures as reported at the time, which disagree: Pence put his loan at $220,000,
+the bank examiners at $399,000 for all "the Lafe Pence companies". Made for this story from the newspaper reports
+cited in the text.
+:::
+
+The examiners' report in February 1908 found the bank had never been solvent and that "the Lafe Pence companies owe the
+bank $399,000" ([Oregonian, 8 Feb 1908](cat:news-oregonian-1908-02-08-p1-experts-report-title-guarantee-pence-399000));
+Pence wrote back that his loan was $220,000
+([Oregonian, 9 Feb 1908](cat:news-sunday-oregonian-1908-02-09-s3-p7-pence-letter-loan-is-220000)). By August he was
+in court over unpaid judgments, accusing the bank's officers of plotting to ruin him, and handed over four silver
+dollars ([Oregonian, 21 Aug 1908](cat:news-oregonian-1908-08-21-p11-pence-says-ross-tried-to-ruin-him)). The city
+could not make him take the park flume out before June 1909
+([Journal, 8 Mar 1909](cat:news-oregon-journal-1909-03-08-p3-city-cannot-oust-pence-flume-macleay-park)); by the end
+of that month it was gone
+([Journal, 29 Jun 1909](cat:news-oregon-journal-1909-06-29-p6-pence-gets-check-back-flume-removed)). In November,
+reporting Lewis & Wiley's purchase of the land, the Oregonian noted that Pence had tried "this identical project"
+and failed ([Oregonian, 21 Nov 1909](cat:news-sunday-oregonian-1909-11-21-s4-p7-lewis-wiley-buy-90-acres-guilds-lake)).
+
+<div class="keynum"><span>$220,000 to $399,000</span> of bank money behind the scheme, depending on who was counting;
+two banks failed in 1907 with it on their books.</div>
