@@ -142,17 +142,11 @@ def main():
         rows.append((q, rec("m1698_1906", e, None if e is None else round(e - 3.4, 1),
                             "index" if s(a["kind"]) == "index" else "contour", method)))
     out["m1698_1906_contours"] = (rows, "LineString")
-    # M/1697 Westover (hand + auto)
+    # M/1697 Westover (the user's hand trace)
     rows = []
     for q, a in layer(EXPO, "m1697_contours_hand"):
         e = num(a["elev"])
         rows.append((q, rec("m1697_westover", e, None if e is None else round(e - 3.4, 1), "contour", "hand", s(a["flag"]))))
-    for q, a in layer(TER / "westover_1917_contours_auto.gpkg", "westover_1917_contours_auto"):
-        e = num(a["elev"])
-        if e is None:          # machine-traced fragments never given a height: left out of the public export
-            continue
-        rows.append((q, rec("m1697_westover", e, round(e - 3.4, 1), "contour", "auto",
-                            "elevation assigned by machine, not checked" if s(a["flag"]) == "elev?" else s(a["flag"]))))
     out["m1697_westover_contours"] = (rows, "LineString")
     # job 5174
     rows = []

@@ -42,7 +42,6 @@ Blackham)*. The scans the lines were traced from belong to their archives; see e
   **depths** below a shore at 8 ft (`elev_city` = 8 - depth); a few soundings had their decimal points restored.
   The Average High Water and 1894 high-water lines are given 25 and 30 ft; the "6 ft level" line has no height.
 - **M/1698 and M/1697:** both sheets read 3.4 ft above the city datum and are corrected by -3.4 ft.
-- **M/1697:** 89 machine-traced fragments without heights are left out of this export.
 - **Job 5174:** five contours were extrapolated by the tracer to follow the original stream (flagged).
 - **Forestry extension:** the stadia shots carry their own benchmark and read about 15 ft high against the city
   datum; `elev_city` = printed - 15. One Russell & Blyth 300 ft line reads ~15 ft below today's ground (flagged).
