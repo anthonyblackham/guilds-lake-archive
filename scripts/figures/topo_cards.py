@@ -48,7 +48,7 @@ SCANS = {   # survey_id: (image, georeference kind, georeference file, shift E, 
     "usgs_1896": (G / "olmsted_02640-6_usgs1896_willamette_heights_local.png", "world",
                   G / "olmsted_02640-6_usgs1896_willamette_heights_local.pgw", 308, 57),
     "huber_1902": (G / "job02399_plan09_huber-maxwell-survey-blueprint.jpg", "points",
-                   G / "job02399_plan09_huber-maxwell-survey-blueprint.jpg.points", 20, -10),
+                   G / "job02399_plan09_huber-maxwell-survey-blueprint.jpg.p6fit.points", 20, -10),   # the 14-corner fit the traces use
     "olmsted_p6_1903": (G / "job02399_plan06_topographic-survey_stitched.tif", "points",
                         G / "job02399_plan06_topographic-survey_stitched.tif.points", 0, 0),
     "m1698_1906": (G / "M1698_blytheswood-park-contour-map-1906.jpg", "world",
