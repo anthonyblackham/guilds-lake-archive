@@ -1,8 +1,81 @@
 ---
 title: Lafe Pence and the Scotch Nubbin
 subtitle: How a promoter set out to wash the West Hills into Guild's Lake, 1905-1909
-status: Draft. Chapters 3 and 5-7; chapters 1, 2 and 4 to come.
+status: Draft. Chapters 2, 3 and 5-7; chapters 1 and 4 to come.
 ---
+
+## 2. The big idea
+
+<p class="when">1905</p>
+
+Pence's scheme began with water. In February 1905 he filed on Bull Run, Portland's own water source, for a suburban
+water company; the legislature promptly passed a bill that no one but the city could claim Bull Run water, and he
+withdrew ([Journal, 14 Feb 1905](cat:news-oregon-journal-1905-02-14-p8-pence-bull-run-filing)). In March he and two
+partners incorporated the West Portland Canal & Pipe Line Co.
+([Journal, 9 Mar 1905](cat:news-oregon-journal-1905-03-09-p16-west-portland-canal-pipe-line-inc)), and over the
+spring he recorded claims on creek after creek round the city: Marquam, Tanner, Balch and Johnson creeks, and in
+Washington County 125 cubic feet a second of East Dairy Creek and 75 of McKay Creek, to be brought 20 miles by canal,
+with six reservoirs, at a cost put at a million dollars. The purposes named included hydraulic mining, sluicing and
+filling ([Oregonian, 13 Apr 1905](cat:news-oregonian-1905-04-13-p8-pence-water-filings-hawkins)).
+
+The idea was to wash the West Hills into Guild's Lake. Water from the far side of the hills would come round by canal
+and tunnel to the crest above Willamette Heights, drop to hydraulic giants, and sluice the hillsides down into the low
+ground, making building terraces on the hills and new land in the lake (Figure {ch2-ditch-1905})
+([Oregonian, 21 May 1905](cat:news-oregonian-1905-05-21-p31)). By April his men had built nearly four miles of benches
+behind the Heights and laid 2,800 feet of flume lumber, with 42 men in camp
+([Hillsboro Independent, 21 Apr 1905](cat:news-hillsboro-independent-1905-04-21-p4-will-tear-hills-down)). The
+Scottish-American Investment Co., which owned much of the hill land, backed him
+([Oregonian, 16 Apr 1905](cat:news-sunday-oregonian-1905-04-16-p10-blyth-ultimatum-park-board)).
+
+::: figure ch2-ditch-1905.jpg
+**Figure {ch2-ditch-1905}.** "Lafe Pence's Ditch and What He Purposes to Accomplish." The diagram looks west from
+over Willamette Heights: the headgate on Balch Creek, the canal and flume under construction along the canyon, the
+proposed tunnels, and Sylvan, 775 feet above the lake, at the far end; the photographs show the headgate, the canal
+being dug on the crest above Macleay Park, the lower flume, the upper flume, and the hill to be cut down. Sunday
+Oregonian, 21 May 1905, p. 31. [Catalogue entry](cat:news-oregonian-1905-05-21-p31)
+:::
+
+The trouble was the park. The surest way down to the hill lay through Macleay Park, and its commissioner, Colonel
+L. L. Hawkins, fought him from the start. In April the city attorney warned that anyone carrying Balch Creek water over
+city land would be arrested for trespass
+([Journal, 15 Apr 1905](cat:news-oregon-journal-1905-04-15-p8-pence-warned-balch-gulch)), and Hawkins, finding that
+Pence's surveyed ditch already cut across a corner of the park, posted a man to arrest him at the first shovelful
+([Oregonian, 15 Apr 1905](cat:news-oregonian-1905-04-15-p10-trespass-stops-pence)). The county judge called the scheme
+"the airiest I have ever seen"
+([Oregonian, 28 Apr 1905](cat:news-oregonian-1905-04-28-p11-webster-no-water-rights)). In May Pence took the Park
+Board, the mayor and the city engineer along his ditch, 600 feet above the city, and explained how the water would come
+from Dairy Creek by tunnels under Sylvan and the Barnes road (Figure {ch2-works-map})
+([Oregonian, 9 May 1905](cat:news-oregonian-1905-05-09-p16)); the board split two to two
+([Oregonian, 10 May 1905](cat:news-oregonian-1905-05-10-p11-park-board-postpones-pence)). The next day one of his
+teamsters, James Dixson, was killed when blasting on the ditch stampeded his team
+([Journal, 10 May 1905](cat:news-oregon-journal-1905-05-10-p3-pence-teamster-injured-blast)).
+
+::: figure ch2-works-map.jpg
+**Figure {ch2-works-map}.** How the works were laid out by 1906. Top: the Pence Company's own "Map showing the general
+course of the Pence Company High Line Flume and the Pence Company Canal", drawn on the township and section grid.
+Bottom: the same ground today, in the same frame, with the two routes traced from it: the canal from its intakes on the
+Washington County creeks, the High Line Flume (dashed), the crossing at Cornelius Pass and the long run south along the
+Linnton road to Balch Gulch, by the Scotch Nubbin. The 1905 plan had brought the water further south, by tunnels under
+Sylvan. The old map is fitted to the section corners, to within about 340 feet. City of Portland Archives,
+A2009-009.3473 (AP/21787); bottom panel made for this story, with the 1902 lake outline and the 1897 boundary of
+Macleay Park. Base map © OpenStreetMap contributors. [Catalogue entry](cat:pdx-archives-a2009-009-3473)
+:::
+
+On 1 June the Lewis and Clark Exposition opened on the lake shore below. Pence, who had borrowed $500 that morning to
+pay his men and give each a five-dollar gold piece to spend at the fair, watched the opening from the hill with his son
+([Journal, 8 Mar 1907](cat:news-oregon-journal-1907-03-08-p5-pence-filling-terminals-35-miles-flumes)). The Board of
+Trade endorsed his plan for terracing Willamette Heights
+([Oregonian, 3 Jun 1905](cat:news-oregonian-1905-06-03-p14-park-board-hears-pence-board-of-trade)), but on 15 June the
+Park Board refused him, unanimously, any flume or pipe through Macleay Park and any use of Balch Creek
+([Journal, 15 Jun 1905](cat:news-oregon-journal-1905-06-15-p8-park-board-refuses-pence-oregon-buildings)). The
+Oregonian said the refusal was no judgment on his scheme, only respect for Donald Macleay's wish that the park be kept
+wild ([Oregonian, 17 Jun 1905](cat:news-oregonian-1905-06-17-p8-editorial-macleay-wish-respected)). Within days his
+backing fell through; he laid off his unpaid men and contracted out the finishing of the upper ditch
+([Oregonian, 25 Jun 1905](cat:news-sunday-oregonian-1905-06-25-p24-touch-of-high-finance)). He would come back to the
+park that winter, without asking.
+
+<div class="keynum"><span>20 miles</span> of canal planned, from Dairy Creek in Washington County to the hills behind
+Willamette Heights; four miles of benches built by April 1905.</div>
 
 ## 3. The flume war
 
