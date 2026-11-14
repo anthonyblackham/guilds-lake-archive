@@ -313,9 +313,12 @@ Through the winter three hydraulic giants washed away the upper part of the knol
 trestles down the north wall of the gulch, across it near Savier and 31st, past Pence's office in the old Emergency
 Hospital, through the Klondike building and out over the Trail and the Bridge of Nations: nearly a mile, to a diked fill
 behind the Government Building (Figure {ch5-route-map})
-([Oregonian, 7 Mar 1907](https://oregonnews.uoregon.edu/lccn/sn83025138/1907-03-07/ed-1/seq-12/)). The Journal
-counted some 35 miles of flume on three levels across the whole works
-([Journal, 8 Mar 1907](cat:news-oregon-journal-1907-03-08-p5-pence-filling-terminals-35-miles-flumes)).
+([Oregonian, 7 Mar 1907](https://oregonnews.uoregon.edu/lccn/sn83025138/1907-03-07/ed-1/seq-12/)). Pence's camp
+claimed some 35 miles of flume on three levels across the whole works
+([Journal, 8 Mar 1907](cat:news-oregon-journal-1907-03-08-p5-pence-filling-terminals-35-miles-flumes)); when the
+bank's receivers counted that December, they found about 12 miles of flumes, ditches and pipe in the Balch Creek plant
+and a 14-mile lumber flume from above Cornelius Gap, finished but never used because its sawmill was never built
+([Journal, 13 Dec 1907](https://oregonnews.uoregon.edu/lccn/sn85042444/1907-12-13/ed-1/seq-6/)).
 
 ::: figure ch5-route-map.jpg narrow
 **Figure {ch5-route-map}.** The spoil route. The cut face and the flumes on the hill are traced from the 11 March 1907 picture
