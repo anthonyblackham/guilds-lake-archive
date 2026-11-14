@@ -1,7 +1,7 @@
 ---
 title: Lafe Pence and the Scotch Nubbin
 subtitle: How a promoter set out to wash the West Hills into Guild's Lake, 1905-1909
-status: Draft. Chapters 5 and 6; chapters 1-4 and 7 to come.
+status: Draft. Chapters 5-7; chapters 1-4 to come.
 ---
 
 ## 5. Washing down the Scotch Nubbin
@@ -167,3 +167,43 @@ and failed ([Oregonian, 21 Nov 1909](cat:news-sunday-oregonian-1909-11-21-s4-p7-
 
 <div class="keynum"><span>$220,000 to $399,000</span> of bank money behind the scheme, depending on who was counting;
 two banks failed in 1907 with it on their books.</div>
+
+## 7. What's left
+
+<p class="when">1909 to today</p>
+
+In November 1909 Lewis & Wiley, the Seattle regrade contractors, bought 90 acres of Guild's Lake land to fill, and the
+Oregonian noted that Pence had attempted "this identical project" and failed after building his flumes and starting to
+sluice ([Oregonian, 21 Nov 1909](cat:news-sunday-oregonian-1909-11-21-s4-p7-lewis-wiley-buy-90-acres-guilds-lake)).
+They pumped their water instead of waiting for winter rain, and over five years washed Goldsmith Hill and the slopes
+behind it into the lake as Westover Terraces. When W. H. Lewis declared the work finished in 1914, he said every trace
+of construction had been cleared away, "even including the old Lafe Pence structures"
+([Oregonian, 13 Sep 1914](cat:news-sunday-oregonian-1914-09-13-s4-p8-westover-hill-removed-diagram)). That is the
+next story.
+
+The bank's receiver wrote Pence's accounts off as worthless in 1912
+([Oregonian, 27 Jan 1912](cat:news-oregonian-1912-01-27-p9-title-receiver-report-pence-worthless)). By then he was a
+patent lawyer in Washington, D.C., turning up as a contested delegate to that year's Democratic convention
+([Journal, 6 Jun 1912](cat:news-oregon-journal-1912-06-06-p19-pence-bobs-up-dc-delegate-baltimore)); a year later his
+wife sued him for separation
+([Oregonian, 17 Jun 1913](cat:news-oregonian-1913-06-17-p3-mrs-pence-sues-lillian-duke)). He died in Washington in
+October 1923 and was buried in Columbus, Indiana (Biographical Directory of the U.S. Congress).
+
+On the ground, the Scotch Nubbin is still there if you know where to look (Figure {ch7-today-map}). The house-topped
+knob at 374 feet, west of NW 32nd and 33rd Avenues, is its summit, cut down by some 55 feet; the low ground just west
+of it is the small valley that lay behind the knoll on the 1896 survey. The steep face above Balch Gulch is where the
+giants and then the shovels bit into it, and the gulch floor by the Thurman Street bridge, which Pence's trestles
+crossed, now lies under as much as 40 feet of later fill.
+
+::: figure ch7-today-map.jpg
+**Figure {ch7-today-map}.** The Scotch Nubbin today. Dashed contours: the knoll before any cutting (USGS 1896, 25 ft
+interval, re-anchored on today's knob). Red: the cut face in the 11 March 1907 picture, projected onto today's ground, so drawn a little behind (south-west of)
+where the face itself stood. The knob is the knoll's
+cut-down summit; the low ground west of it, the valley behind the knoll. Made for this story from the City of
+Portland's 2025 aerial photographs shaded with the 2019 lidar, the
+USGS 1896 Portland quadrangle (Olmsted job #2640 plan 6), the 1907 picture's solved camera and OpenStreetMap street
+names.
+:::
+
+<div class="keynum"><span>About 200,000 cu yd</span> sluiced into Guild's Lake by Pence: under 2 percent of the
+11.7 million cubic yards that eventually filled the lake (estimated from the model).</div>

@@ -27,7 +27,11 @@ Every caption has three parts:
 | Ink | `#2a241c` | labels, structures (bridges), markers |
 
 ## Maps
-- Today's ground as a soft grey hillshade (2019 lidar) under everything, so readers can find their way.
+- Base layer, by what the map is about:
+  - **today** (where things are now): the 2025 aerial photographs shaded with the 2019 lidar hillshade, slightly
+    desaturated, so houses and streets place the reader and the relief still reads under trees. Overlays go white or
+    light with a dark edge so they show on the photo; north arrow, scale bar and credit sit on a pale panel.
+  - **the past** (historic lake, buildings, routes): today's ground as a soft grey hillshade, so the historic layers lead.
 - North arrow and a scale bar in feet on every map; grid is Oregon State Plane North (EPSG:2913).
 - Labels in plain words on a pale box; italics for areas and water, bold for the subject of the figure.
 - A small grey note in a corner saying what the base layers are.
