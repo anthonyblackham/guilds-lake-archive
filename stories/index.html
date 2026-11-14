@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stories - Guild&#x27;s Lake Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root { --bg: #f4efe4; --panel: #fbf8f1; --ink: #2a241c; --muted: #6d6354; --rule: #d9cfbd; --accent: #2f5f62;
+  --badge: #8a5a2b; --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif; color-scheme: light }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #1b1915; --panel: #24211c; --ink: #ece4d4;
+  --muted: #a89c88; --rule: #3a352c; --accent: #7fb3b0; --badge: #d9a26a; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #1b1915; --panel: #24211c; --ink: #ece4d4; --muted: #a89c88; --rule: #3a352c;
+  --accent: #7fb3b0; --badge: #d9a26a; color-scheme: dark }
+* { box-sizing: border-box }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 var(--serif) }
+a { color: var(--accent) }
+.wrap { max-width: 1000px; margin: 0 auto; padding-block: 0 72px;
+  padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)) }
+.top { font: 13px var(--sans); padding-block: 18px; display: flex; gap: 18px; flex-wrap: wrap; border-bottom: 1px solid var(--rule) }
+.top a { text-decoration: none }
+.top .here { color: var(--muted) }
+header { padding-block: 44px 24px }
+h1 { font: 600 clamp(32px, 6vw, 50px)/1.08 var(--serif); margin: 0 0 12px; letter-spacing: -0.015em; text-wrap: balance }
+header p { font: italic 20px/1.45 var(--serif); color: var(--muted); margin: 0; max-width: 62ch }
+h2 { font: 600 24px/1.2 var(--serif); margin: 40px 0 10px }
+.doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 8px }
+.door { display: block; background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 20px 20px 18px;
+  text-decoration: none; color: inherit }
+.door:hover, .door:focus-visible { border-color: var(--accent); outline: none }
+.door .k { font: 600 11px var(--sans); text-transform: uppercase; letter-spacing: 0.1em; color: var(--badge) }
+.door h3 { font: 600 22px/1.2 var(--serif); margin: 6px 0 8px; color: var(--ink) }
+.door p { margin: 0; font: 14.5px/1.5 var(--sans); color: var(--muted) }
+.door.soon { opacity: 0.6; pointer-events: none }
+.list { display: grid; gap: 14px }
+.item { background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 16px 18px }
+.item h3 { font: 600 20px/1.25 var(--serif); margin: 0 0 4px }
+.item .meta { font: 13.5px/1.5 var(--sans); color: var(--muted) }
+.item p { margin: 6px 0 0; font: 15px/1.5 var(--sans) }
+table { width: 100%; border-collapse: collapse; font: 14px/1.45 var(--sans) }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top }
+th { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted) }
+.scroll { overflow-x: auto }
+.dl { display: inline-block; background: var(--accent); color: var(--bg); text-decoration: none; padding: 9px 16px;
+  border-radius: 6px; font: 500 15px var(--sans) }
+.note { font: 14px/1.55 var(--sans); color: var(--muted) }
+</style></head>
+<body><div class="wrap">
+<nav class="top"><a href="../">Guild&#x27;s Lake Archive</a> <span class="here">Stories</span></nav>
+<header><h1>Stories</h1><p>Illustrated write-ups built from the archive's sources.</p></header>
+<main>
+<div class="list">
+  <div class="item"><h3><a href="pence/">Lafe Pence and the Scotch Nubbin</a></h3>
+    <div class="meta">Draft &middot; seven chapters &middot; 1857-1923</div>
+    <p>How a promoter set out to wash the West Hills into Guild's Lake: the water claims, the flume war in Macleay Park,
+    the fair bought for scrap, the winter on the Scotch Nubbin, and the banks that failed with his loans on their books.</p></div>
+</div></main>
+</div></body></html>

@@ -1,6 +1,61 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Guild's Lake Archive</title>
-<meta http-equiv="refresh" content="0; url=site/">
-<link rel="canonical" href="site/">
-<p><a href="site/">Guild's Lake Archive</a></p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Guild&#x27;s Lake Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root { --bg: #f4efe4; --panel: #fbf8f1; --ink: #2a241c; --muted: #6d6354; --rule: #d9cfbd; --accent: #2f5f62;
+  --badge: #8a5a2b; --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif; color-scheme: light }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #1b1915; --panel: #24211c; --ink: #ece4d4;
+  --muted: #a89c88; --rule: #3a352c; --accent: #7fb3b0; --badge: #d9a26a; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #1b1915; --panel: #24211c; --ink: #ece4d4; --muted: #a89c88; --rule: #3a352c;
+  --accent: #7fb3b0; --badge: #d9a26a; color-scheme: dark }
+* { box-sizing: border-box }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 var(--serif) }
+a { color: var(--accent) }
+.wrap { max-width: 1000px; margin: 0 auto; padding-block: 0 72px;
+  padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)) }
+.top { font: 13px var(--sans); padding-block: 18px; display: flex; gap: 18px; flex-wrap: wrap; border-bottom: 1px solid var(--rule) }
+.top a { text-decoration: none }
+.top .here { color: var(--muted) }
+header { padding-block: 44px 24px }
+h1 { font: 600 clamp(32px, 6vw, 50px)/1.08 var(--serif); margin: 0 0 12px; letter-spacing: -0.015em; text-wrap: balance }
+header p { font: italic 20px/1.45 var(--serif); color: var(--muted); margin: 0; max-width: 62ch }
+h2 { font: 600 24px/1.2 var(--serif); margin: 40px 0 10px }
+.doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 8px }
+.door { display: block; background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 20px 20px 18px;
+  text-decoration: none; color: inherit }
+.door:hover, .door:focus-visible { border-color: var(--accent); outline: none }
+.door .k { font: 600 11px var(--sans); text-transform: uppercase; letter-spacing: 0.1em; color: var(--badge) }
+.door h3 { font: 600 22px/1.2 var(--serif); margin: 6px 0 8px; color: var(--ink) }
+.door p { margin: 0; font: 14.5px/1.5 var(--sans); color: var(--muted) }
+.door.soon { opacity: 0.6; pointer-events: none }
+.list { display: grid; gap: 14px }
+.item { background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 16px 18px }
+.item h3 { font: 600 20px/1.25 var(--serif); margin: 0 0 4px }
+.item .meta { font: 13.5px/1.5 var(--sans); color: var(--muted) }
+.item p { margin: 6px 0 0; font: 15px/1.5 var(--sans) }
+table { width: 100%; border-collapse: collapse; font: 14px/1.45 var(--sans) }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top }
+th { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted) }
+.scroll { overflow-x: auto }
+.dl { display: inline-block; background: var(--accent); color: var(--bg); text-decoration: none; padding: 9px 16px;
+  border-radius: 6px; font: 500 15px var(--sans) }
+.note { font: 14px/1.55 var(--sans); color: var(--muted) }
+</style></head>
+<body><div class="wrap">
+<nav class="top"><span class="here">Guild&#x27;s Lake Archive</span></nav>
+<header><h1>Guild's Lake Archive</h1><p>Sources, stories and maps for Guild's Lake, the 1905 Lewis and Clark Exposition grounds, and their subsequent development.</p></header>
+<main>
+<div class="doors">
+  <a class="door" href="site/"><span class="k">Sources</span><h3>The catalogue</h3>
+    <p>2,132 photographs, maps, surveys, letters and newspaper pages, each linked to the archive that holds the original.</p></a>
+  <a class="door" href="stories/"><span class="k">Stories</span><h3>Illustrated write-ups</h3>
+    <p>What the sources say, told with maps and pictures: first, Lafe Pence and the Scotch Nubbin.</p></a>
+  <a class="door" href="topography/"><span class="k">Maps &amp; data</span><h3>Historic topography</h3>
+    <p>The ground before it was cut and filled: 7 surveys traced into 1,713 contours and spot heights, free to download (CC BY 4.0).</p></a>
+  <div class="door soon"><span class="k">Coming later</span><h3>3D model</h3>
+    <p>The fairgrounds, the lake and the hills in three dimensions, before and after.</p></div>
+</div></main>
+</div></body></html>

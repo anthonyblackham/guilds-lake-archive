@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Historic topography - Guild&#x27;s Lake Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root { --bg: #f4efe4; --panel: #fbf8f1; --ink: #2a241c; --muted: #6d6354; --rule: #d9cfbd; --accent: #2f5f62;
+  --badge: #8a5a2b; --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif; color-scheme: light }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #1b1915; --panel: #24211c; --ink: #ece4d4;
+  --muted: #a89c88; --rule: #3a352c; --accent: #7fb3b0; --badge: #d9a26a; color-scheme: dark } }
+:root[data-theme="dark"] { --bg: #1b1915; --panel: #24211c; --ink: #ece4d4; --muted: #a89c88; --rule: #3a352c;
+  --accent: #7fb3b0; --badge: #d9a26a; color-scheme: dark }
+* { box-sizing: border-box }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 var(--serif) }
+a { color: var(--accent) }
+.wrap { max-width: 1000px; margin: 0 auto; padding-block: 0 72px;
+  padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)) }
+.top { font: 13px var(--sans); padding-block: 18px; display: flex; gap: 18px; flex-wrap: wrap; border-bottom: 1px solid var(--rule) }
+.top a { text-decoration: none }
+.top .here { color: var(--muted) }
+header { padding-block: 44px 24px }
+h1 { font: 600 clamp(32px, 6vw, 50px)/1.08 var(--serif); margin: 0 0 12px; letter-spacing: -0.015em; text-wrap: balance }
+header p { font: italic 20px/1.45 var(--serif); color: var(--muted); margin: 0; max-width: 62ch }
+h2 { font: 600 24px/1.2 var(--serif); margin: 40px 0 10px }
+.doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 8px }
+.door { display: block; background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 20px 20px 18px;
+  text-decoration: none; color: inherit }
+.door:hover, .door:focus-visible { border-color: var(--accent); outline: none }
+.door .k { font: 600 11px var(--sans); text-transform: uppercase; letter-spacing: 0.1em; color: var(--badge) }
+.door h3 { font: 600 22px/1.2 var(--serif); margin: 6px 0 8px; color: var(--ink) }
+.door p { margin: 0; font: 14.5px/1.5 var(--sans); color: var(--muted) }
+.door.soon { opacity: 0.6; pointer-events: none }
+.list { display: grid; gap: 14px }
+.item { background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: 16px 18px }
+.item h3 { font: 600 20px/1.25 var(--serif); margin: 0 0 4px }
+.item .meta { font: 13.5px/1.5 var(--sans); color: var(--muted) }
+.item p { margin: 6px 0 0; font: 15px/1.5 var(--sans) }
+table { width: 100%; border-collapse: collapse; font: 14px/1.45 var(--sans) }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top }
+th { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted) }
+.scroll { overflow-x: auto }
+.dl { display: inline-block; background: var(--accent); color: var(--bg); text-decoration: none; padding: 9px 16px;
+  border-radius: 6px; font: 500 15px var(--sans) }
+.note { font: 14px/1.55 var(--sans); color: var(--muted) }
+</style></head>
+<body><div class="wrap">
+<nav class="top"><a href="../">Guild&#x27;s Lake Archive</a> <span class="here">Maps &amp; data</span></nav>
+<header><h1>Historic topography</h1><p>The ground before it was cut and filled.</p></header>
+<main>
+<p>Contours and spot heights traced from the historic surveys of Guild's Lake and the hills behind it, from 1896 to
+about 1910, before and during the sluicing and filling that reshaped the ground. Every line carries the height printed
+on the sheet and its height on the City of Portland datum, how it was traced, and a link to the sheet it came from.</p>
+<p><a class="dl" href="../gis/historic_topography.gpkg" download>Download historic_topography.gpkg</a>
+&nbsp; <span class="note">GeoPackage, 2.9 MB &middot; EPSG:2913 (Oregon North, feet) &middot;
+10 layers + survey index &middot; <a href="https://github.com/anthonyblackham/guilds-lake-archive/blob/main/gis/README.md">README</a>
+&middot; <a href="https://github.com/anthonyblackham/guilds-lake-archive/blob/main/gis/LICENSE">CC BY 4.0</a></span></p>
+<h2>The surveys</h2>
+<div class="scroll"><table><thead><tr><th>Survey</th><th>Date</th><th>Interval</th><th>Datum correction</th><th>Features</th></tr></thead>
+<tbody><tr><td><a href="../site/#map-00058-02640-6-front-jpg6366319132355342">USGS Portland quadrangle (1:62,500), the Scotch Nubbin</a></td>
+<td>surveyed 1896</td><td>25 ft</td>
+<td>none</td><td>20</td></tr><tr><td><a href="../site/#map-job02399-plan09-huber-maxwell-survey-blu">Map of Willamette Heights and Guild&#x27;s Lake (Huber &amp; Maxwell survey)</a></td>
+<td>August 1902</td><td>1 ft (labelled every 5); lake soundings</td>
+<td>none</td><td>472</td></tr><tr><td><a href="../site/#map-job02399-plan06-topographic-survey-stitc">Topographic survey of the main grounds (Olmsted job 2399 plan 6, sheets 1-2 stitched)</a></td>
+<td>c. 1903</td><td>1 ft (index every 5)</td>
+<td>none</td><td>843</td></tr><tr><td><a href="../site/#pdx-archives-m1698">Contour map of Blytheswood Park, part of the Danford Balch DLC (City Archives M/1698)</a></td>
+<td>30 November 1906</td><td>10 ft (index every 50)</td>
+<td>-3.4 ft</td><td>55</td></tr><tr><td><a href="../site/#pdx-archives-m1697">Contour Map of Parts of Westover Terraces and Vicinity (City Archives M/1697)</a></td>
+<td>traced 22 March 1917 from surveys of c. 1906-10</td><td>25 ft</td>
+<td>-3.4 ft</td><td>26</td></tr><tr><td><a href="../site/#map-job05174-plan01-north-of-thurman-sheet-b">Lewis-Wiley Company: Balch&#x27;s Gulch, north of Thurman Street (Olmsted job 5174 plan 1)</a></td>
+<td>10 May 1910</td><td>contours ~5 ft, spot heights</td>
+<td>none</td><td>244</td></tr><tr><td><a href="../site/#pdx-archives-forestry-extension">Contours along Forestry Extension, taken from map of Russell &amp; Blythe (Dept of Parks sheet 2)</a></td>
+<td>c. 1909-10</td><td>contours from Russell &amp; Blyth; pencilled creek marks and stadia shots</td>
+<td>none</td><td>53</td></tr></tbody></table></div>
+<p class="note">Each survey's title links to its sheet in the catalogue. Coming next: a showcase card for each survey,
+with the original sheet, its contours coloured by height over today's ground, and the reconstructed terrain.</p></main>
+</div></body></html>
