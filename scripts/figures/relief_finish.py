@@ -3,6 +3,7 @@ ones (a thick rule at the edge and a thin rule just inside it).
 
     python scripts/figures/relief_finish.py <render.png|jpg> [out.png|jpg] [--colour=222,230,236]
         [--flat=<flat render> --fade=build/relief/<id>/fade.png]
+        [--mark=build/relief/<id>/relief.json --label="Title|subtitle" --label-at=0.22,0.86 --leader=0]
 
 With --flat/--fade, the relief render is first blended into a flat render of the same sheet and light (relief_render
 --flat 1) by the fade mask, so the relief dissolves into the paper at the edge of the surveyed ground.
@@ -33,6 +34,47 @@ if "--flat" in opts:                                         # fade the relief i
     m = (m.astype(np.float32) / 255)[..., None]
     img = (flat * (1 - m) + img * m).round().astype(np.uint8)
 bgr = colour[::-1]
+if "--mark" in opts:                                         # outline a feature in red and label it with a leader line
+    import json
+    from PIL import Image, ImageDraw, ImageFont
+    mk = json.loads(Path(opts["--mark"]).read_text())["mark"]
+    pil = Image.fromarray(img[..., ::-1])
+    dr = ImageDraw.Draw(pil)
+    red, halo = (190, 30, 30), (255, 250, 240)
+    lw = max(2, round(w * 0.0022))
+    pts_all = [(x * w, y * h) for line in mk["lines"] for x, y in line]
+    xs, ys = [p[0] for p in pts_all], [p[1] for p in pts_all]
+    cx, cy = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2
+    rx, ry = (max(xs) - min(xs)) * 0.95 + w * 0.012, (max(ys) - min(ys)) * 0.95 + w * 0.012   # a loose ring around it
+    for wd, col in ((2 * lw + 4, halo), (2 * lw, red)):          # the ring at twice the line weight
+        dr.ellipse([cx - rx, cy - ry, cx + rx, cy + ry], outline=col, width=wd)
+    r = (rx + ry) / 2
+    lx, ly = (float(v) * s for v, s in zip(opts.get("--label-at", "0.22,0.86").split(","), (w, h)))
+    text = opts.get("--label", "")
+    size = round(w * 0.022)
+    font = ImageFont.truetype("C:/Windows/Fonts/georgiab.ttf", size)
+    small = ImageFont.truetype("C:/Windows/Fonts/georgiai.ttf", round(size * 0.72))
+    title, _, sub = text.partition("|")
+    # leader from the label to the ring's edge
+    d = np.hypot(cx - lx, cy - ly)
+    ux, uy = (lx - cx) / d, (ly - cy) / d                    # the leader stops at the ellipse
+    k = 1 / np.hypot(ux / rx, uy / ry)
+    ex, ey = cx + ux * k, cy + uy * k
+    if opts.get("--leader", "1") != "0":
+        dr.line([(lx, ly), (ex, ey)], fill=halo, width=lw + 4)
+        dr.line([(lx, ly), (ex, ey)], fill=red, width=lw)
+    bx = dr.textbbox((0, 0), title, font=font)
+    sb = dr.textbbox((0, 0), sub, font=small) if sub else (0, 0, 0, 0)
+    tw, th = max(bx[2], sb[2]), bx[3] + (sb[3] + size * 0.35 if sub else 0)
+    pad = size * 0.45
+    x0 = lx - tw - pad * 2 if lx > cx else lx
+    y0 = ly - th / 2 - pad
+    dr.rounded_rectangle([x0, y0, x0 + tw + pad * 2, y0 + th + pad * 2], radius=pad * 0.6, fill=halo, outline=red,
+                         width=lw)
+    dr.text((x0 + pad, y0 + pad), title, font=font, fill=red)
+    if sub:
+        dr.text((x0 + pad, y0 + pad + bx[3] + size * 0.35), sub, font=small, fill=(90, 40, 30))
+    img = np.asarray(pil)[..., ::-1].copy()
 thick, gap, thin = (max(1, round(f * w)) for f in (0.009, 0.0045, 0.0015))
 out = img.copy()
 cv2.rectangle(out, (0, 0), (w - 1, h - 1), bgr, thickness=2 * thick)            # half of it falls outside the image

@@ -29,16 +29,19 @@ import topo_cards as TC  # noqa: E402  the scans, their georeferences and the su
 
 Image.MAX_IMAGE_PIXELS = None
 BUILD = TC.S.HERE / "build" / "relief"
-OWN_LINES = {"huber_1902", "m1698_1906"}   # surveys whose relief is interpolated straight from their own traced lines and heights
+OWN_LINES = {"huber_1902", "m1698_1906", "usgs_1896"}   # surveys whose relief is interpolated straight from their own traced lines and heights
                              # (Huber's part of combined_dem predates the re-fitted plan 9 georeference)
 CROP = {   # the part of each scan that is published: (left, top, right, bottom) as fractions of the scan
     "huber_1902": (0.0225, 0.1045, 0.9945, 0.9185),        # just inside the printed border; relief_finish.py redraws it
+}
+MARK = {   # a feature to point out on the finished render: circled around its traced contour at this height (ft city)
+    "usgs_1896": 375.0,                                    # the Nubbin: its lowest closed summit ring
 }
 EVEN_GROUND = {   # sheets with a faded band: (top fraction of the height to even out, feather fraction)
     "huber_1902": (0.16, 0.06),
 }
 FEATHER = {}                     # a wider ease down to the paper (ft), per sheet
-FADE = {"huber_1902": 350.0}     # shading faded to the flat sheet over this far inside the footprint (relief_finish)
+FADE = {"huber_1902": 350.0, "usgs_1896": 60.0}     # shading faded to the flat sheet over this far inside the footprint (relief_finish)
 FLUSH = {"m1698_1906": None,   # sheets whose high ground runs to the edge: relief measured from the edge surface
          "huber_1902": 12.0}
 FLUSH_REACH_FT = 700.0
@@ -48,6 +51,8 @@ WATER = {   # survey: (gpkg, layer, shift E/N like its traced lines, water level
                    "soundings are measured from"),
 }         # how far in from a high edge the partial flush reaches    # (None = all of it; a level = only where the edge is higher than that, ft city)
 BEVEL = {"m1698_1906": 0.8, "huber_1902": 0.6}  # steeper edge allowance for hill sheets (rise per foot); others use --bevel
+SKIP_FLAGGED = {"usgs_1896"}   # sheets whose flagged lines must not shape the relief (USGS: below 350 ft they were
+                               # traced against the modern slope, not the drawing)
 NEAR_FT = 300               # how far from a traced line or height the interpolated ground may reach
 SURFACE_KINDS = {"contour", "index", "intermediate", "sounding", "spot"}
 
@@ -63,8 +68,8 @@ def from_own_lines(sid, A, k, W, H):
             continue
         m, _, g, d = read(TC.GPKG, layer=L)
         f = dict(zip(m["fields"], d))
-        for q, e, kd in zip(from_wkb(g), f["elev_city"], f["kind"]):
-            if e is None or not np.isfinite(e) or kd not in SURFACE_KINDS:
+        for q, e, kd, fl in zip(from_wkb(g), f["elev_city"], f["kind"], f["flag"]):
+            if e is None or not np.isfinite(e) or kd not in SURFACE_KINDS or (fl and sid in SKIP_FLAGGED):
                 continue
             for part in getattr(q, "geoms", [q]):
                 if part.geom_type == "Point":
@@ -299,6 +304,20 @@ def prep(sid, width, feather_ft, bevel):
         t2 = np.clip(dist / FADE[sid], 0, 1)                 # blends the flat render into the relief render with it
         cv2.imwrite(str(out / "fade.png"), np.round(t2 * t2 * (3 - 2 * t2) * 255).astype(np.uint8))
         meta["fade_ft"] = FADE[sid]
+    if sid in MARK:                                          # the marked contour, in fractions of the published sheet
+        from pyogrio import list_layers
+        rings = []
+        for L, _ in list_layers(TC.GPKG):
+            if not L.startswith(sid) or L == "surveys":
+                continue
+            m3, _, g3, d3 = read(TC.GPKG, layer=L)
+            f3 = dict(zip(m3["fields"], d3))
+            for q, e in zip(from_wkb(g3), f3["elev_city"]):
+                if e is not None and abs(e - MARK[sid]) < 0.01:
+                    for part in getattr(q, "geoms", [q]):
+                        cr = np.asarray(part.coords) @ Ai[:, :2].T + Ai[:, 2]
+                        rings.append((cr / (w, h)).round(5).tolist())
+        meta["mark"] = {"elev_city_ft": MARK[sid], "lines": rings}
     (out / "relief.json").write_text(json.dumps(meta, indent=1))
     print(sid, f"sheet {meta['sheet_ft'][0]:.0f} x {meta['sheet_ft'][1]:.0f} ft; relief {top:.0f} ft above "
           f"{base:.1f}; height map {W}x{H}")
