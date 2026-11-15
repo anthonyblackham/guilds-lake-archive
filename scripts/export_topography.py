@@ -113,6 +113,8 @@ def main():
     for q, a in layer(EXPO, "huber_contours_hand"):
         e, k = num(a["elev"]), s(a["kind"])
         kind = {"topo": "contour", "Average H.W.": "high_water", "H.W. 1894": "high_water", "6 FT Level": "level_line"}.get(k, k.lower())
+        if not kind and e is not None:                       # lines traced with a height but no kind are contours
+            kind = "contour"
         note = {"Average H.W.": "Average high water, given 25 ft", "H.W. 1894": "high water of 1894, given 30 ft",
                 "6 FT Level": "'6 ft level' line, height unknown"}.get(k, "")
         rows.append((translate(q, 20, -10), rec("huber_1902", e, e, kind, "hand", s(a["flag"]), note)))
