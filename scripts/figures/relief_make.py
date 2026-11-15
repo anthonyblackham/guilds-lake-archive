@@ -23,6 +23,7 @@ SETTINGS = {   # survey: relief_render.py options (heights x, sun, water ...), a
     "olmsted_p6_1903": ["--vex", "3", "--sun-alt", "30", "--width", "3600"],
     "m1698_1906": ["--vex", "2", "--sun-alt", "35", "--width", "3600"],
     "m1697_westover": ["--vex", "1.8", "--sun-alt", "35", "--width", "3600"],
+    "job5174_1910": ["--vex", "2", "--sun-alt", "32", "--width", "3000"],
 }
 LABEL = {      # for sheets that point out one feature (relief_prep MARK): label text ("title|subtitle"), where (its left edge, middle), and "0" for no leader line
     "usgs_1896": ("Scotch Nubbin|~425 ft in 1896, site of Lafe Pence's sluicing operation in 1906", "0.04,0.645", "0"),
@@ -31,6 +32,8 @@ BORDER = {     # border colour (R,G,B) where the default pale blue-white doesn't
     "m1698_1906": "72,58,40",
 }
 CAPTION = {    # read by build_pages.py
+    "job5174_1910": "The sheet in relief: Balch Gulch north of Thurman Street in 1910, its walls and the flats "
+                    "below raised from the traced contours and spot heights (heights x2).",
     "m1697_westover": "The sheet in relief: the hill under Westover Terraces before it was sluiced away, raised from "
                       "the contours traced off this 1917 copy of the 1906-10 survey (heights x1.8).",
     "m1698_1906": "The sheet in relief: the spurs and ravines of Blytheswood Park below Cornell Road raised from the "

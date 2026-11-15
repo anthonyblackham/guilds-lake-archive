@@ -158,7 +158,8 @@ def main():
                             "extrapolated by the tracer to follow the original stream" if s(a["flag"]) == "extrapolated" else "")))
     out["job5174_1910_contours"] = (rows, "LineString")
     rows = [(q, rec("job5174_1910", num(a["elev"]), num(a["elev"]), "spot", "hand", "", s(a["note"])))
-            for q, a in layer(TER / "job5174_gulch_trace.gpkg", "job5174_spot_heights_hand")]
+            for q, a in layer(TER / "job5174_gulch_trace.gpkg", "job5174_spot_heights_hand")
+            if s(a["note"]) != "bridge"]                    # bridge-deck heights are not the gulch: left out
     out["job5174_1910_spot_heights"] = (rows, "Point")
     # forestry extension sheet: creek marks, stadia shots, Russell & Blyth contours
     rows = []
