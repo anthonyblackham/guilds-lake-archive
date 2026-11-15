@@ -29,10 +29,11 @@ import topo_cards as TC  # noqa: E402  the scans, their georeferences and the su
 
 Image.MAX_IMAGE_PIXELS = None
 BUILD = TC.S.HERE / "build" / "relief"
-OWN_LINES = {"huber_1902", "m1698_1906", "usgs_1896"}   # surveys whose relief is interpolated straight from their own traced lines and heights
+OWN_LINES = {"huber_1902", "m1698_1906", "usgs_1896", "olmsted_p6_1903"}   # surveys whose relief is interpolated straight from their own traced lines and heights
                              # (Huber's part of combined_dem predates the re-fitted plan 9 georeference)
 CROP = {   # the part of each scan that is published: (left, top, right, bottom) as fractions of the scan
     "huber_1902": (0.0225, 0.1045, 0.9945, 0.9185),        # just inside the printed border; relief_finish.py redraws it
+    "olmsted_p6_1903": (0.004, 0.018, 0.996, 0.975),      # just inside the paper's edges
 }
 MARK = {   # a feature to point out on the finished render: circled around its traced contour at this height (ft city)
     "usgs_1896": 375.0,                                    # the Nubbin: its lowest closed summit ring
@@ -40,19 +41,21 @@ MARK = {   # a feature to point out on the finished render: circled around its t
 EVEN_GROUND = {   # sheets with a faded band: (top fraction of the height to even out, feather fraction)
     "huber_1902": (0.16, 0.06),
 }
-FEATHER = {}                     # a wider ease down to the paper (ft), per sheet
-FADE = {"huber_1902": 350.0, "usgs_1896": 60.0}     # shading faded to the flat sheet over this far inside the footprint (relief_finish)
+FEATHER = {"m1698_1906": 1.0}    # ease down to the paper (ft), per sheet; Blytheswood none: it stops at its property lines
+FADE = {"huber_1902": 350.0, "usgs_1896": 60.0, "olmsted_p6_1903": 300.0}     # shading faded to the flat sheet over this far inside the footprint (relief_finish)
 FLUSH = {"m1698_1906": None,   # sheets whose high ground runs to the edge: relief measured from the edge surface
-         "huber_1902": 12.0}
+         "huber_1902": 12.0, "olmsted_p6_1903": 12.0}
 FLUSH_REACH_FT = 700.0
 WATER = {   # survey: (gpkg, layer, shift E/N like its traced lines, water level ft city datum, what it is)
     "huber_1902": (TC.P / "qgis" / "expo-model.gpkg", "huber_1902_lakebed_refit", (20, -10), 8.0,
                    "Guild's Lake, August 1902: the user's lake outline re-fitted to plan 9; level = the 8 ft shore the "
                    "soundings are measured from"),
 }         # how far in from a high edge the partial flush reaches    # (None = all of it; a level = only where the edge is higher than that, ft city)
-BEVEL = {"m1698_1906": 0.8, "huber_1902": 0.6}  # steeper edge allowance for hill sheets (rise per foot); others use --bevel
-SKIP_FLAGGED = {"usgs_1896"}   # sheets whose flagged lines must not shape the relief (USGS: below 350 ft they were
+BEVEL = {"m1698_1906": 99.0, "huber_1902": 0.6, "olmsted_p6_1903": 0.6}  # steeper edge allowance for hill sheets (rise per foot); others use --bevel
+SKIP_FLAGGED = {"usgs_1896", "olmsted_p6_1903"}   # sheets whose flagged lines must not shape the relief (USGS: below 350 ft they were
                                # traced against the modern slope, not the drawing)
+MASK_BY_SURFACE = {"m1698_1906"}   # relief only where the survey's original surface (topo_cards.SURFACES) has data
+NEAR = {"m1698_1906": 90.0}   # tighter reach where traced areas sit apart (no ramps across the gap)
 NEAR_FT = 300               # how far from a traced line or height the interpolated ground may reach
 SURFACE_KINDS = {"contour", "index", "intermediate", "sounding", "spot"}
 
@@ -92,7 +95,7 @@ def from_own_lines(sid, A, k, W, H):
     ij = np.round(P).astype(int)
     ok = (ij[:, 0] >= 0) & (ij[:, 0] < W) & (ij[:, 1] >= 0) & (ij[:, 1] < H)
     seen[ij[ok, 1], ij[ok, 0]] = 0
-    near = cv2.distanceTransform(seen, cv2.DIST_L2, 5) * np.hypot(A[0, 0], A[1, 0]) * k <= NEAR_FT
+    near = cv2.distanceTransform(seen, cv2.DIST_L2, 5) * np.hypot(A[0, 0], A[1, 0]) * k <= NEAR.get(sid, NEAR_FT)
     return np.where(near, z, np.nan)
 
 
@@ -272,6 +275,11 @@ def prep(sid, width, feather_ft, bevel):
         z = np.where(lake > 0, np.minimum(z, level - 0.5), z)  # the outline is the shore: inside it, the bed stays under water
         mk = np.maximum(mk, (lake > 0).astype(np.uint8))
     inside = (mk > 0) & np.isfinite(z)
+    if sid in MASK_BY_SURFACE:                               # only where the sheet's original surface has ground
+        ref = np.full((H, W), np.nan, np.float32)
+        for name, dz in TC.SURFACES[sid]:
+            ref = np.where(np.isfinite(ref), ref, TC.sample(name, gx, gy) - dz)
+        inside &= cv2.erode(np.isfinite(ref).astype(np.uint8), np.ones((3, 3), np.uint8)) > 0
     ft_px = np.hypot(A[0, 0], A[1, 0]) * k                   # feet per height-map pixel
     flush = sid in FLUSH
     if flush:                                                # relief measured from a smooth surface that follows the

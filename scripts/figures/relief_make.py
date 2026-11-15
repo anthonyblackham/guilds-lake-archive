@@ -20,11 +20,20 @@ BLENDER = os.environ.get("BLENDER", r"C:\Program Files\Blender Foundation\Blende
 SETTINGS = {   # survey: relief_render.py options (heights x, sun, water ...), as chosen sheet by sheet
     "huber_1902": ["--vex", "5", "--sun-alt", "30", "--water", "1"],
     "usgs_1896": ["--vex", "3", "--sun-alt", "30", "--width", "2600"],
+    "olmsted_p6_1903": ["--vex", "3", "--sun-alt", "30", "--width", "3600"],
+    "m1698_1906": ["--vex", "2", "--sun-alt", "35", "--width", "3600"],
 }
 LABEL = {      # for sheets that point out one feature (relief_prep MARK): label text ("title|subtitle"), where (its left edge, middle), and "0" for no leader line
     "usgs_1896": ("Scotch Nubbin|~425 ft in 1896, site of Lafe Pence's sluicing operation in 1906", "0.04,0.645", "0"),
 }
+BORDER = {     # border colour (R,G,B) where the default pale blue-white doesn't suit the paper
+    "m1698_1906": "72,58,40",
+}
 CAPTION = {    # read by build_pages.py
+    "m1698_1906": "The sheet in relief: the spurs and ravines of Blytheswood Park below Cornell Road raised from the "
+                  "traced contours (heights x2).",
+    "olmsted_p6_1903": "The sheet in relief: the hill above Thurman Street, Balch Gulch and the bluff along St. Helens "
+                       "Road raised from the traced contours (heights x3).",
     "usgs_1896": "Olmsted's copy of the 1896 USGS map, the only drawing of the Scotch Nubbin before it was sluiced "
                  "away: its summit rings raised and circled in red (heights x3).",
     "huber_1902": "The sheet in relief: Guild's Lake in 1902 at its 8 ft shore, the peninsula and the hill above "
@@ -50,6 +59,8 @@ def make(sid):
     if (build / "fade.png").exists():
         run(BLENDER, "-b", "-P", FIG / "relief_render.py", "--", sid, *opts, "--flat", "1", "--out", flat)
         finish += [f"--flat={flat}", f"--fade={build / 'fade.png'}"]
+    if sid in BORDER:
+        finish += [f"--colour={BORDER[sid]}"]
     if sid in LABEL:
         text, at, *leader = LABEL[sid]
         finish += [f"--mark={build / 'relief.json'}", f"--label={text}", f"--label-at={at}",
