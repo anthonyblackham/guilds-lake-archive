@@ -70,6 +70,8 @@ ANCHOR = {   # where each overview title sits (EPSG:2913 ft): on the main body o
     "m1697_westover": (7636178, 686972),
 }
 TURN = {"m1697_westover"}   # sheets photographed on their side: panels turned 90 degrees clockwise so north is up
+CARD_CROP = {"forestry_ext_c1910": (0.063, 0.134, 0.927, 0.900)}   # never show beyond (fractions of the scan)
+OWN_SURFACE = {"forestry_ext_c1910"}   # terrain panel interpolated from the survey's own lines, not a DEM
 CUT = {"m1697_westover": "m1698_dem"}   # survey: a neighbour's surface whose straight east and south edges it stops at
 SURFACES = {   # survey_id: [(dem, shift to the city datum), ...] first with data wins; else today's lidar
     "usgs_1896": [("nubbin_1896_dem", 0.0)],
@@ -135,6 +137,32 @@ def cut_mask(sid, gx, gy):
     return (gx < ea * gy + eb) & (gy > sa * gx + sb)
 
 
+def own_surface(feats, gx, gy, near_ft=300.0):
+    """Ground interpolated (linear) from a survey's own contours and spot heights at map points, within near_ft of
+    something traced, lightly smoothed."""
+    from scipy.interpolate import LinearNDInterpolator
+    from scipy.spatial import cKDTree
+    pts, zs = [], []
+    for q, e in feats:
+        if not np.isfinite(e):
+            continue
+        for part in getattr(q, "geoms", [q]):
+            if part.geom_type == "Point":
+                xy = np.array([[part.x, part.y]])
+            else:
+                n = max(2, int(part.length / 8))
+                xy = np.array([part.interpolate(t, normalized=True).coords[0] for t in np.linspace(0, 1, n)])
+            pts.append(xy)
+            zs.append(np.full(len(xy), e))
+    P, Z = np.vstack(pts), np.concatenate(zs)
+    z = LinearNDInterpolator(P, Z)(gx, gy).astype(np.float32)
+    d, _ = cKDTree(P).query(np.c_[gx.ravel(), gy.ravel()], distance_upper_bound=near_ft)
+    z[~np.isfinite(d.reshape(gx.shape))] = np.nan
+    ok = np.isfinite(z)
+    sm = cv2.GaussianBlur(np.where(ok, z, 0), (0, 0), 2.0) / np.maximum(cv2.GaussianBlur(ok.astype(np.float32), (0, 0), 2.0), 1e-6)
+    return np.where(ok, sm, np.nan).astype(np.float32)
+
+
 def features(sid):
     out = []
     for L, _ in list_layers(GPKG):
@@ -180,6 +208,9 @@ def card(sid, footprint):
     m = 0.04 * max(c1 - c0, r1 - r0)
     w, h = Image.open(img).size
     c0, r0, c1, r1 = max(0, c0 - m), max(0, r0 - m), min(w, c1 + m), min(h, r1 + m)
+    if sid in CARD_CROP:
+        fx0, fy0, fx1, fy1 = CARD_CROP[sid]
+        c0, r0, c1, r1 = max(c0, fx0 * w), max(r0, fy0 * h), min(c1, fx1 * w), min(r1, fy1 * h)
     turn = sid in TURN
     s = PW / ((r1 - r0) if turn else (c1 - c0))
     PH = int(round(((c1 - c0) if turn else (r1 - r0)) * s))
@@ -226,8 +257,11 @@ def card(sid, footprint):
     gx = (A[0, 0] * cc + A[0, 1] * rr + A[0, 2]).astype(np.float32)
     gy = (A[1, 0] * cc + A[1, 1] * rr + A[1, 2]).astype(np.float32)
     z = np.full(gx.shape, np.nan, np.float32)
-    for name, dz in SURFACES[sid]:
-        z = np.where(np.isfinite(z), z, sample(name, gx, gy) - dz)
+    if sid in OWN_SURFACE:
+        z = own_surface(feats, gx, gy)
+    else:
+        for name, dz in SURFACES[sid]:
+            z = np.where(np.isfinite(z), z, sample(name, gx, gy) - dz)
     mk = np.zeros((PH, PW), np.uint8)
     ring = to_uv(np.asarray(footprint.exterior.coords) @ Ai[:, :2].T + Ai[:, 2])
     cv2.fillPoly(mk, [ring.round().astype(np.int32)], 1)

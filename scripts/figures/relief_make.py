@@ -24,14 +24,19 @@ SETTINGS = {   # survey: relief_render.py options (heights x, sun, water ...), a
     "m1698_1906": ["--vex", "2", "--sun-alt", "35", "--width", "3600"],
     "m1697_westover": ["--vex", "1.8", "--sun-alt", "35", "--width", "3600"],
     "job5174_1910": ["--vex", "2", "--sun-alt", "32", "--width", "3000"],
+    "forestry_ext_c1910": ["--vex", "1", "--sun-alt", "30", "--width", "3600"],
 }
 LABEL = {      # for sheets that point out one feature (relief_prep MARK): label text ("title|subtitle"), where (its left edge, middle), and "0" for no leader line
     "usgs_1896": ("Scotch Nubbin|~425 ft in 1896, site of Lafe Pence's sluicing operation in 1906", "0.04,0.645", "0"),
 }
 BORDER = {     # border colour (R,G,B) where the default pale blue-white doesn't suit the paper
     "m1698_1906": "72,58,40",
+    "forestry_ext_c1910": "72,58,40",
 }
 CAPTION = {    # read by build_pages.py
+    "forestry_ext_c1910": "The sheet in relief: the hills either side of Balch Canyon, from the Russell & Blyth "
+                          "contours copied onto the Forestry Extension sheet and its spot heights in the canyon; Macleay Park "
+                          "(lower left), where the ground is little changed, from the 2019 lidar (true heights).",
     "job5174_1910": "The sheet in relief: Balch Gulch north of Thurman Street in 1910, its walls and the flats "
                     "below raised from the traced contours and spot heights (heights x2).",
     "m1697_westover": "The sheet in relief: the hill under Westover Terraces before it was sluiced away, raised from "

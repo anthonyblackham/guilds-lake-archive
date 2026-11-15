@@ -29,13 +29,14 @@ import topo_cards as TC  # noqa: E402  the scans, their georeferences and the su
 
 Image.MAX_IMAGE_PIXELS = None
 BUILD = TC.S.HERE / "build" / "relief"
-OWN_LINES = {"huber_1902", "m1698_1906", "usgs_1896", "olmsted_p6_1903", "m1697_westover", "job5174_1910"}   # surveys whose relief is interpolated straight from their own traced lines and heights
+OWN_LINES = {"huber_1902", "m1698_1906", "usgs_1896", "olmsted_p6_1903", "m1697_westover", "job5174_1910", "forestry_ext_c1910"}   # surveys whose relief is interpolated straight from their own traced lines and heights
                              # (Huber's part of combined_dem predates the re-fitted plan 9 georeference)
 CROP = {   # the part of each scan that is published: (left, top, right, bottom) as fractions of the scan
     "huber_1902": (0.0225, 0.1045, 0.9945, 0.9185),        # just inside the printed border; relief_finish.py redraws it
     "olmsted_p6_1903": (0.004, 0.018, 0.996, 0.975),      # just inside the paper's edges
     "m1697_westover": (0.045, 0.032, 0.948, 0.955),
-    "job5174_1910": (0.012, 0.010, 0.988, 0.990),          # just inside the paper's edges        # (north-up frame) inside the torn edges, ruler and weights
+    "job5174_1910": (0.012, 0.010, 0.988, 0.990),          # just inside the paper's edges
+    "forestry_ext_c1910": (0.063, 0.134, 0.927, 0.900),    # inside the beanbags, ruler and table edge        # (north-up frame) inside the torn edges, ruler and weights
 }
 MARK = {   # a feature to point out on the finished render: circled around its traced contour at this height (ft city)
     "usgs_1896": 375.0,                                    # the Nubbin: its lowest closed summit ring
@@ -50,8 +51,9 @@ EVEN_GROUND = {   # sheets with a faded band: (top fraction of the height to eve
 }
 SIDE_FEATHER = {   # ease (and shading fade) only along edges facing (x right, y down): Westover's SE side
     "m1697_westover": (300.0, (0.866, 0.5)),
+    "forestry_ext_c1910": (640.0, (1.0, 0.0), "mask"),   # east edges only            # east side eased; the Macleay Park (west) side a sharp cut
 }
-FEATHER = {"m1698_1906": 1.0, "m1697_westover": 1.0}    # ease down to the paper (ft), per sheet; Blytheswood none: it stops at its property lines
+FEATHER = {"m1698_1906": 1.0, "m1697_westover": 1.0, "forestry_ext_c1910": 1.0}    # ease down to the paper (ft), per sheet; Blytheswood none: it stops at its property lines
 FADE = {"huber_1902": 350.0, "usgs_1896": 60.0, "olmsted_p6_1903": 300.0, "job5174_1910": 300.0}     # shading faded to the flat sheet over this far inside the footprint (relief_finish)
 FLUSH = {"m1698_1906": None,   # sheets whose high ground runs to the edge: relief measured from the edge surface
          "huber_1902": 12.0, "olmsted_p6_1903": 12.0, "job5174_1910": 12.0}
@@ -61,14 +63,23 @@ WATER = {   # survey: (gpkg, layer, shift E/N like its traced lines, water level
                    "Guild's Lake, August 1902: the user's lake outline re-fitted to plan 9; level = the 8 ft shore the "
                    "soundings are measured from"),
 }         # how far in from a high edge the partial flush reaches    # (None = all of it; a level = only where the edge is higher than that, ft city)
-BEVEL = {"m1698_1906": 99.0, "huber_1902": 0.6, "olmsted_p6_1903": 0.6, "m1697_westover": 99.0, "job5174_1910": 0.6}  # steeper edge allowance for hill sheets (rise per foot); others use --bevel
+BEVEL = {"m1698_1906": 99.0, "huber_1902": 0.6, "olmsted_p6_1903": 0.6, "m1697_westover": 99.0, "job5174_1910": 0.6, "forestry_ext_c1910": 99.0}  # steeper edge allowance for hill sheets (rise per foot); others use --bevel
 SKIP_FLAGGED = {"usgs_1896", "olmsted_p6_1903", "job5174_1910"}   # sheets whose flagged lines must not shape the relief (USGS: below 350 ft they were
                                # traced against the modern slope, not the drawing)
 MASK_BY_SURFACE = {"m1698_1906"}   # relief only where the survey's original surface (topo_cards.SURFACES) has data
-SMOOTH = {"job5174_1910": 6.0}   # smoothing of the traced-line surface (half-res px); more where only spot heights
-NEAR = {"m1698_1906": 90.0}   # tighter reach where traced areas sit apart (no ramps across the gap)
+SMOOTH = {"job5174_1910": 6.0, "forestry_ext_c1910": 8.0}   # smoothing of the traced-line surface (half-res px); more where only spot heights
+NEAR = {"m1698_1906": 90.0, "forestry_ext_c1910": 650.0}   # tighter reach where traced areas sit apart (no ramps across the gap)
 NEAR_FT = 300               # how far from a traced line or height the interpolated ground may reach
-SURFACE_KINDS = {"contour", "index", "intermediate", "sounding", "spot"}
+LIDAR_PATCH = {   # polygons (fractions of the published, cropped sheet) where the 2019 lidar stands in, by the user's call:
+    "forestry_ext_c1910": [(0.0, 0.176), (0.054, 0.176), (0.090, 0.362), (0.231, 0.362), (0.230, 0.578), (0.4125, 0.586),
+                           (0.415, 0.614), (0.541, 0.619), (0.541, 0.827), (0.2825, 0.816), (0.0775, 0.987),
+                           (0.0, 0.987)],   # Macleay Park, ground little changed since
+}
+LIDAR_FILL = {"forestry_ext_c1910": [[(0.0, 0.14), (0.13, 0.14), (0.13, 0.40), (0.0, 0.40)],   # left of the N hill
+                                     [(0.20, 0.36), (0.33, 0.36), (0.33, 0.60), (0.20, 0.60)]]}   # gap by the 700 ft lines   # lidar where untraced
+LIDAR_TAPER = {"forestry_ext_c1910": [("left", 0.14), ("top", 0.18)]}   # lidar eased to paper toward these edges
+LIDAR_RAISE = {}   # (x, y, radius, ft city): pits raised to
+SURFACE_KINDS = {"contour", "index", "intermediate", "sounding", "spot", "stadia", "creek_mark"}
 
 
 def from_own_lines(sid, A, k, W, H):
@@ -382,6 +393,27 @@ def prep(sid, width, feather_ft, bevel):
         z = np.where((lake > 0) & ~((mk > 0) & np.isfinite(z)), level - 3.0, z)
         z = np.where(lake > 0, np.minimum(z, level - 0.5), z)  # the outline is the shore: inside it, the bed stays under water
         mk = np.maximum(mk, (lake > 0).astype(np.uint8))
+    if sid in LIDAR_PATCH:                                   # today's ground where the sheet's ground is unchanged
+        lp = np.zeros((H, W), np.uint8)
+        cv2.fillPoly(lp, [np.round(np.array(LIDAR_PATCH[sid]) * (W, H)).astype(np.int32)], 1)
+        today = TC.sample("balch_hills_dem", gx, gy, False) - 2.10
+        for cx_, cy_, rad, lvl in LIDAR_RAISE.get(sid, []):  # modern pits (a water tank) raised to the level of the
+            disk = np.zeros((H, W), np.float32)              # traced contours beside them, softened at the rim
+            cv2.circle(disk, (round(cx_ * W), round(cy_ * H)), round(rad * W), 1.0, -1)
+            disk = cv2.GaussianBlur(disk, (0, 0), rad * W * 0.15)
+            today = today + np.clip(lvl - today, 0, None) * disk
+        d_in = cv2.distanceTransform(lp, cv2.DIST_L2, 5) * np.hypot(A[0, 0], A[1, 0]) * k
+        wl = np.clip(d_in / 80.0, 0, 1)                      # blended into the traced ground over 80 ft
+        lid_used = (lp > 0) & ~np.isfinite(z)
+        z = np.where(lp > 0, np.where(np.isfinite(z), wl * today + (1 - wl) * z, today), z)
+        mk = np.maximum(mk, lp)
+        for poly in LIDAR_FILL.get(sid, []):                 # only where nothing is traced
+            lf = np.zeros((H, W), np.uint8)
+            cv2.fillPoly(lf, [np.round(np.array(poly) * (W, H)).astype(np.int32)], 1)
+            add = (lf > 0) & ~np.isfinite(z)
+            z = np.where(add, today, z)
+            lid_used |= add
+            mk = np.maximum(mk, add.astype(np.uint8))
     inside = (mk > 0) & np.isfinite(z) & ~TC.cut_mask(sid, gx, gy)
     if sid in MASK_BY_SURFACE:                               # only where the sheet's original surface has ground
         ref = np.full((H, W), np.nan, np.float32)
@@ -399,13 +431,21 @@ def prep(sid, width, feather_ft, bevel):
             base_s *= np.clip(1 - d_edge / FLUSH_REACH_FT, 0, 1) ** 2
         z = np.where(inside, z - base_s, np.nan)
     base = 0.0 if flush and FLUSH[sid] is None else float(np.percentile(z[inside], 0.5))
+    if sid in LIDAR_TAPER:                                   # lidar ground eased to the paper toward the sheet's edge
+        tw = np.ones((H, W), np.float32)
+        uu, vv = np.meshgrid(np.linspace(0, 1, W), np.linspace(0, 1, H))
+        for edge_, span in LIDAR_TAPER[sid]:
+            d_ = {"left": uu, "top": vv, "right": 1 - uu, "bottom": 1 - vv}[edge_]
+            t_ = np.clip(d_ / span, 0, 1)
+            tw *= t_ * t_ * (3 - 2 * t_)
+        z = np.where(lid_used & inside, base + (z - base) * tw, z)
     rel = np.where(inside, z - base if flush and FLUSH[sid] is None else np.clip(z - base, 0, None), 0).astype(np.float32)
     dist = cv2.distanceTransform(inside.astype(np.uint8), cv2.DIST_L2, 5) * ft_px
     t = np.clip(dist / feather_ft, 0, 1)
     rel *= t * t * (3 - 2 * t)                               # smoothstep down to the paper at the footprint edge
     rel = np.clip(rel, -dist * bevel, dist * bevel)                      # and where the edge cuts high ground, a bevel no steeper
     if sid in SIDE_FEATHER:                                  # ease to the paper only along edges facing one way
-        sf_ft, (ux, uy) = SIDE_FEATHER[sid]
+        sf_ft, (ux, uy), *how = SIDE_FEATHER[sid]
         # the footprint polygon's own segments whose outward normal is within ~50 deg of (ux, uy)
         ring = (np.asarray(fps[sid].exterior.coords) @ Ai[:, :2].T + Ai[:, 2]) / k
         area = 0.5 * np.sum(ring[:-1, 0] * ring[1:, 1] - ring[1:, 0] * ring[:-1, 1])   # >0: clockwise on screen
@@ -419,6 +459,14 @@ def prep(sid, width, feather_ft, bevel):
             if nx_ * ux + ny_ * uy > 0.64:
                 cv2.line(seg, tuple(np.round(p0).astype(int)), tuple(np.round(p1).astype(int)), 1, 3)
         facing = seg > 0
+        if how and how[0] == "mask":                         # edges of the traced area itself, not the footprint
+            gy8, gx8 = np.gradient(cv2.GaussianBlur(inside.astype(np.float32), (0, 0), 4))
+            edge = (cv2.morphologyEx(inside.astype(np.uint8), cv2.MORPH_GRADIENT, np.ones((3, 3), np.uint8)) > 0)
+            dirs = how[1] if len(how) > 1 else [(ux, uy)]
+            facing = np.zeros_like(edge)
+            for vx, vy in dirs:
+                facing |= edge & ((-gx8 * vx - gy8 * vy) > 0.5 * np.hypot(gx8, gy8))
+            facing[:10], facing[-10:], facing[:, :10], facing[:, -10:] = False, False, False, False
         d_side = cv2.distanceTransform((~facing).astype(np.uint8), cv2.DIST_L2, 5) * ft_px
         ts = np.clip(d_side / sf_ft, 0, 1)
         side_w = ts * ts * (3 - 2 * ts)

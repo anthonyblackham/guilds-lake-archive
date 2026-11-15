@@ -174,10 +174,11 @@ def main():
     rows = []
     for q, a in layer(TER / "pence_flumes_1906_trace.gpkg", "blyth_topo_trace"):
         e = num(a["elevation"])
-        odd = e == 300 and q.bounds[1] > 688500
+        odd = e == 300 and q.length < 500                    # the short 300 ft piece that reads ~12 ft low (the long
+                                                             # 300 ft line matches today's ground)
         rows.append((q, rec("forestry_ext_c1910", e, e, "contour", "hand",
                             "reads ~15 ft below today's ground: fill or a misread label" if odd else "",
-                            "Russell & Blyth contour (sample traced to check the stadia datum)")))
+                            "Russell & Blyth contour")))
     out["forestry_ext_c1910_contours"] = (rows, "LineString")
 
     # the index: one footprint per survey (hull of its traced features + 100 ft)
