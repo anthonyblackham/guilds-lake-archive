@@ -29,19 +29,28 @@ import topo_cards as TC  # noqa: E402  the scans, their georeferences and the su
 
 Image.MAX_IMAGE_PIXELS = None
 BUILD = TC.S.HERE / "build" / "relief"
-OWN_LINES = {"huber_1902", "m1698_1906", "usgs_1896", "olmsted_p6_1903"}   # surveys whose relief is interpolated straight from their own traced lines and heights
+OWN_LINES = {"huber_1902", "m1698_1906", "usgs_1896", "olmsted_p6_1903", "m1697_westover"}   # surveys whose relief is interpolated straight from their own traced lines and heights
                              # (Huber's part of combined_dem predates the re-fitted plan 9 georeference)
 CROP = {   # the part of each scan that is published: (left, top, right, bottom) as fractions of the scan
     "huber_1902": (0.0225, 0.1045, 0.9945, 0.9185),        # just inside the printed border; relief_finish.py redraws it
     "olmsted_p6_1903": (0.004, 0.018, 0.996, 0.975),      # just inside the paper's edges
+    "m1697_westover": (0.045, 0.032, 0.948, 0.955),        # (north-up frame) inside the torn edges, ruler and weights
 }
 MARK = {   # a feature to point out on the finished render: circled around its traced contour at this height (ft city)
     "usgs_1896": 375.0,                                    # the Nubbin: its lowest closed summit ring
 }
+CLEAN = {"m1697_westover": {}}   # remove pink stains and the cloth weights / holes (clean_stains)
+PAD_TOP = {"m1697_westover": 0.035}   # extra cloned paper above the sheet, as a fraction of its height
+PATCH = {"m1697_westover": [(0.140, 0.815, 0.212, 1.0)]}   # boxes to clone-stamp (fractions, after PAD_TOP): beanbag
+KEEP = {"m1697_westover": 55.0}   # how much brighter than the paper a mark must be to count as drawn (top band)
 EVEN_GROUND = {   # sheets with a faded band: (top fraction of the height to even out, feather fraction)
+    "m1697_westover": (0.05, 0.03),
     "huber_1902": (0.16, 0.06),
 }
-FEATHER = {"m1698_1906": 1.0}    # ease down to the paper (ft), per sheet; Blytheswood none: it stops at its property lines
+SIDE_FEATHER = {   # ease (and shading fade) only along edges facing (x right, y down): Westover's SE side
+    "m1697_westover": (300.0, (0.866, 0.5)),
+}
+FEATHER = {"m1698_1906": 1.0, "m1697_westover": 1.0}    # ease down to the paper (ft), per sheet; Blytheswood none: it stops at its property lines
 FADE = {"huber_1902": 350.0, "usgs_1896": 60.0, "olmsted_p6_1903": 300.0}     # shading faded to the flat sheet over this far inside the footprint (relief_finish)
 FLUSH = {"m1698_1906": None,   # sheets whose high ground runs to the edge: relief measured from the edge surface
          "huber_1902": 12.0, "olmsted_p6_1903": 12.0}
@@ -51,7 +60,7 @@ WATER = {   # survey: (gpkg, layer, shift E/N like its traced lines, water level
                    "Guild's Lake, August 1902: the user's lake outline re-fitted to plan 9; level = the 8 ft shore the "
                    "soundings are measured from"),
 }         # how far in from a high edge the partial flush reaches    # (None = all of it; a level = only where the edge is higher than that, ft city)
-BEVEL = {"m1698_1906": 99.0, "huber_1902": 0.6, "olmsted_p6_1903": 0.6}  # steeper edge allowance for hill sheets (rise per foot); others use --bevel
+BEVEL = {"m1698_1906": 99.0, "huber_1902": 0.6, "olmsted_p6_1903": 0.6, "m1697_westover": 99.0}  # steeper edge allowance for hill sheets (rise per foot); others use --bevel
 SKIP_FLAGGED = {"usgs_1896", "olmsted_p6_1903"}   # sheets whose flagged lines must not shape the relief (USGS: below 350 ft they were
                                # traced against the modern slope, not the drawing)
 MASK_BY_SURFACE = {"m1698_1906"}   # relief only where the survey's original surface (topo_cards.SURFACES) has data
@@ -170,7 +179,86 @@ def tile_paper(patch, h, w, seed=7):
     return (acc / wsum)[P // 2:P // 2 + h, P // 2:P // 2 + w]
 
 
-def clone_paper(a, band):
+def clean_stains(a, pink=8.0, dark=45, grow=9):
+    """Paper stained pink/purple or covered by dark objects (weights, holes), replaced with clean cloned paper colour-
+    matched to the sheet; the drawn linework inside a stain is kept."""
+    h, w = a.shape[:2]
+    f = a.astype(np.float32)
+    lines = line_mask(a) > 0
+    v = f.max(axis=2)
+    # pink/purple: red raised against the paper's own red level (paper is blue: red is low)
+    red = f[..., 2]
+    red_paper = paper_level(a[..., 2])
+    bright = cv2.dilate((v > 150).astype(np.uint8), np.ones((15, 15), np.uint8)) > 0   # pasted labels, lettering
+    stain = ((red - red_paper > pink) | (red - np.median(red) > pink * 1.6)) & ~lines & ~bright
+    stain = cv2.morphologyEx(stain.astype(np.uint8), cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    stain = cv2.dilate(stain, np.ones((grow, grow), np.uint8))
+    # dark objects (beanbags, holes) with their lit rims: grown well out, and covered even where a rim looks like a line
+    obj = cv2.morphologyEx((v < dark).astype(np.uint8), cv2.MORPH_OPEN, np.ones((9, 9), np.uint8))
+    obj = cv2.dilate(obj, np.ones((grow * 5, grow * 5), np.uint8))
+    lines &= obj == 0
+    stain = np.maximum(stain, obj)
+    if not stain.any():
+        return a
+    clean = (stain == 0) & ~lines
+    paper = tile_paper(clean_patch(a, (~clean).astype(np.uint8), max(256, w // 14)), h, w, seed=5)
+    # match the fill to the paper around each stain, not the sheet as a whole (normalised blur of the clean paper)
+    q = 8
+    fs = cv2.resize(f, (w // q, h // q), interpolation=cv2.INTER_AREA)
+    cs = cv2.resize(clean.astype(np.float32), (w // q, h // q), interpolation=cv2.INTER_AREA)[..., None]
+    sig = max(w // q // 60, 6)
+    local = cv2.GaussianBlur(fs * cs, (0, 0), sig) / np.maximum(cv2.GaussianBlur(cs, (0, 0), sig)[..., None], 1e-3)
+    local = cv2.resize(local, (w, h), interpolation=cv2.INTER_LINEAR)
+    paper += local - np.median(paper[::9, ::9].reshape(-1, 3), axis=0).astype(np.float32)
+    m = cv2.GaussianBlur(stain.astype(np.float32), (0, 0), 3)[..., None]
+    m = np.where(lines[..., None], m * 0.0, m)               # never paint over a line
+    return flatten_tint(np.clip(f * (1 - m) + paper * m, 0, 255).astype(np.uint8))
+
+
+def stamp(a, box, feather=0.2):
+    """Cover a box (fractions of the image: left, top, right, bottom) with clean paper cloned from the sheet, matched to
+    the paper just around it and feathered at its edges (not at the sheet's own edge)."""
+    h, w = a.shape[:2]
+    x0, y0, x1, y1 = round(box[0] * w), round(box[1] * h), round(box[2] * w), round(box[3] * h)
+    bw, bh = x1 - x0, y1 - y0
+    paper = tile_paper(clean_patch(a, line_mask(a), max(256, w // 14)), bh, bw, seed=21)
+    m = max(bw, bh) // 3
+    ya, xa = max(0, y0 - m), max(0, x0 - m)
+    ring = a[ya:min(h, y1 + m), xa:min(w, x1 + m)].astype(np.float32)
+    inner = np.zeros(ring.shape[:2], bool)
+    inner[y0 - ya:y0 - ya + bh, x0 - xa:x0 - xa + bw] = True
+    paper += np.median(ring[~inner].reshape(-1, 3), axis=0) - np.median(paper[::5, ::5].reshape(-1, 3), axis=0)
+    ry, rx = np.arange(bh), np.arange(bw)
+    dy = np.minimum(ry, bh - 1 - ry) if y1 < h else ry       # distance in from the box edge
+    dx = np.minimum(rx, bw - 1 - rx)
+    wt = np.clip(np.minimum(dy[:, None] / max(1, feather * bh), dx[None, :] / max(1, feather * bw)), 0, 1)[..., None]
+    out = a.copy()
+    out[y0:y1, x0:x1] = np.clip(a[y0:y1, x0:x1] * (1 - wt) + paper * wt, 0, 255).astype(np.uint8)
+    return out
+
+
+def flatten_tint(a):
+    """Even out broad colour casts (faded or stained patches) without touching the texture or lines: the paper's
+    low-frequency colour (a, b in Lab, lines dropped by a median filter) is shifted to the sheet's median colour."""
+    h, w = a.shape[:2]
+    lab = cv2.cvtColor(a, cv2.COLOR_BGR2LAB).astype(np.float32)
+    q = 16
+    small = cv2.resize(cv2.cvtColor(a, cv2.COLOR_BGR2LAB), (w // q, h // q), interpolation=cv2.INTER_AREA)
+    k = 2 * (max(w // q // 40, 5) // 2) + 1
+    low = cv2.medianBlur(small, k).astype(np.float32)
+    low = cv2.GaussianBlur(low, (0, 0), max(w // q // 120, 2))
+    target = np.median(low.reshape(-1, 3), axis=0)
+    corr = cv2.resize(target - low, (w, h), interpolation=cv2.INTER_LINEAR)
+    big = cv2.morphologyEx((a.max(axis=2) > 150).astype(np.uint8), cv2.MORPH_OPEN, np.ones((31, 31), np.uint8))
+    big = cv2.dilate(big, np.ones((9, 9), np.uint8))          # solid bright areas only (pasted labels), not lettering
+    keep = cv2.GaussianBlur(big.astype(np.float32), (0, 0), 2)[..., None]       # labels keep their own colour
+    lab[..., 1:] += corr[..., 1:] * (1 - keep)               # colour only; lightness keeps the paper's own texture
+    lab[..., 1:] = 128 + (lab[..., 1:] - 128) * (1 - 0.65 * keep)   # pasted labels: their peach toned to a pale cream
+    lab[..., 0] += 8 * keep[..., 0]
+    return cv2.cvtColor(np.clip(lab, 0, 255).astype(np.uint8), cv2.COLOR_LAB2BGR)
+
+
+def clone_paper(a, band, keep_thresh=22.0):
     """Replace the paper of the top band with clean paper cloned from the emptiest part of the sheet (tiled, matched to
     the paper just below the band), keeping the band's drawn linework and lettering."""
     top, feather = band
@@ -182,7 +270,7 @@ def clone_paper(a, band):
     below = below[mask[b:b + max(50, h // 40)].reshape(-1) == 0]
     sample = paper[::7, ::7].reshape(-1, 3)                  # median of a sample (a float32 mean over the band drifts)
     paper += (np.median(below, axis=0) - np.median(sample, axis=0)).astype(np.float32)
-    keep = cv2.GaussianBlur(mask[:b].astype(np.float32), (0, 0), 1.0)[..., None]
+    keep = cv2.GaussianBlur(line_mask(a[:b], thresh=keep_thresh).astype(np.float32), (0, 0), 1.0)[..., None]
     wt = np.clip((b - np.arange(b)) / max(1, int(h * feather)), 0, 1)[:, None, None]   # 1 in the band -> 0 at its foot
     band_px = a[:b].astype(np.float32)
     new = paper * (1 - keep) + band_px * keep
@@ -227,14 +315,32 @@ def prep(sid, width, feather_ft, bevel):
     out = BUILD / sid
     out.mkdir(parents=True, exist_ok=True)
     a = cv2.imread(str(img), cv2.IMREAD_COLOR)
+    if sid in TC.TURN:                                       # sheets photographed on their side: turn north-up first
+        a = cv2.rotate(a, cv2.ROTATE_90_CLOCKWISE)           # new (c', r') = old (r = h - c', c = r')
+        A = np.array([[-A[0, 1], A[0, 0], A[0, 1] * h + A[0, 2]],
+                      [-A[1, 1], A[1, 0], A[1, 1] * h + A[1, 2]]])
+        w, h = h, w
     if sid in CROP:                                          # trim the sheet to its map; the sheet frame moves with it
         x0, y0, x1, y1 = CROP[sid]
         c0, r0, c1, r1 = round(x0 * w), round(y0 * h), round(x1 * w), round(y1 * h)
         a = a[r0:r1, c0:c1]
         A[:, 2] += A[:, 0] * c0 + A[:, 1] * r0
         w, h = c1 - c0, r1 - r0
+    if sid in CLEAN:                                         # stains and objects on the scan: cloned paper over them
+        a = clean_stains(a, **CLEAN[sid])
+    if sid in PAD_TOP:                                       # a strip of cloned paper on top (title clear of border)
+        ph = round(h * PAD_TOP[sid])
+        mk0 = line_mask(a)
+        strip = tile_paper(clean_patch(a, mk0, max(256, w // 14)), ph, w, seed=11)
+        below = a[:max(50, h // 40)].reshape(-1, 3)[mk0[:max(50, h // 40)].reshape(-1) == 0]
+        strip += (np.median(below, axis=0) - np.median(strip[::7, ::7].reshape(-1, 3), axis=0)).astype(np.float32)
+        a = np.vstack([np.clip(strip, 0, 255).astype(np.uint8), a])
+        A[:, 2] -= A[:, 1] * ph                              # rows move down by ph
+        h += ph
+    for box in PATCH.get(sid, []):                           # clone-stamp clean paper over a fixed box
+        a = stamp(a, box)
     if sid in EVEN_GROUND:                                   # even out a faded band of paper (lines kept)
-        a = clone_paper(even_ground(a, EVEN_GROUND[sid]), EVEN_GROUND[sid])
+        a = clone_paper(even_ground(a, EVEN_GROUND[sid]), EVEN_GROUND[sid], keep_thresh=KEEP.get(sid, 22.0))
     # texture: the (cropped) sheet
     if a.shape[1] > 8192:
         a = cv2.resize(a, (8192, round(a.shape[0] * 8192 / a.shape[1])), interpolation=cv2.INTER_AREA)
@@ -274,7 +380,7 @@ def prep(sid, width, feather_ft, bevel):
         z = np.where((lake > 0) & ~((mk > 0) & np.isfinite(z)), level - 3.0, z)
         z = np.where(lake > 0, np.minimum(z, level - 0.5), z)  # the outline is the shore: inside it, the bed stays under water
         mk = np.maximum(mk, (lake > 0).astype(np.uint8))
-    inside = (mk > 0) & np.isfinite(z)
+    inside = (mk > 0) & np.isfinite(z) & ~TC.cut_mask(sid, gx, gy)
     if sid in MASK_BY_SURFACE:                               # only where the sheet's original surface has ground
         ref = np.full((H, W), np.nan, np.float32)
         for name, dz in TC.SURFACES[sid]:
@@ -296,6 +402,25 @@ def prep(sid, width, feather_ft, bevel):
     t = np.clip(dist / feather_ft, 0, 1)
     rel *= t * t * (3 - 2 * t)                               # smoothstep down to the paper at the footprint edge
     rel = np.clip(rel, -dist * bevel, dist * bevel)                      # and where the edge cuts high ground, a bevel no steeper
+    if sid in SIDE_FEATHER:                                  # ease to the paper only along edges facing one way
+        sf_ft, (ux, uy) = SIDE_FEATHER[sid]
+        # the footprint polygon's own segments whose outward normal is within ~50 deg of (ux, uy)
+        ring = (np.asarray(fps[sid].exterior.coords) @ Ai[:, :2].T + Ai[:, 2]) / k
+        area = 0.5 * np.sum(ring[:-1, 0] * ring[1:, 1] - ring[1:, 0] * ring[:-1, 1])   # >0: clockwise on screen
+        seg = np.zeros((H, W), np.uint8)
+        for p0, p1 in zip(ring[:-1], ring[1:]):
+            dx_, dy_ = p1 - p0
+            ln = np.hypot(dx_, dy_)
+            if ln == 0:
+                continue
+            nx_, ny_ = (dy_ / ln, -dx_ / ln) if area > 0 else (-dy_ / ln, dx_ / ln)
+            if nx_ * ux + ny_ * uy > 0.64:
+                cv2.line(seg, tuple(np.round(p0).astype(int)), tuple(np.round(p1).astype(int)), 1, 3)
+        facing = seg > 0
+        d_side = cv2.distanceTransform((~facing).astype(np.uint8), cv2.DIST_L2, 5) * ft_px
+        ts = np.clip(d_side / sf_ft, 0, 1)
+        side_w = ts * ts * (3 - 2 * ts)
+        rel *= side_w
                                                              # than `bevel` (rise per foot) instead of a cliff
     rel = cv2.GaussianBlur(rel, (0, 0), 0.7)
     lo, top = float(min(rel.min(), 0)), float(rel.max())
@@ -308,10 +433,11 @@ def prep(sid, width, feather_ft, bevel):
         wm[~inside] = 0
         cv2.imwrite(str(out / "water.png"), wm)
         meta["water"] = {"level_city_ft": level, "level_rel_ft": level - base, "what": what}
-    if sid in FADE:                                          # 0 at the footprint edge -> 1 FADE ft inside: relief_finish
-        t2 = np.clip(dist / FADE[sid], 0, 1)                 # blends the flat render into the relief render with it
-        cv2.imwrite(str(out / "fade.png"), np.round(t2 * t2 * (3 - 2 * t2) * 255).astype(np.uint8))
-        meta["fade_ft"] = FADE[sid]
+    if sid in FADE or sid in SIDE_FEATHER:                   # 0 at the footprint edge -> 1 FADE ft inside: relief_finish
+        t2 = np.clip(dist / FADE[sid], 0, 1) if sid in FADE else np.ones_like(dist)   # blends the flat render in
+        f2 = t2 * t2 * (3 - 2 * t2) * (side_w if sid in SIDE_FEATHER else 1)
+        cv2.imwrite(str(out / "fade.png"), np.round(f2 * 255).astype(np.uint8))
+        meta["fade_ft"] = FADE.get(sid)
     if sid in MARK:                                          # the marked contour, in fractions of the published sheet
         from pyogrio import list_layers
         rings = []

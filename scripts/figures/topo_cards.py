@@ -70,6 +70,7 @@ ANCHOR = {   # where each overview title sits (EPSG:2913 ft): on the main body o
     "m1697_westover": (7636178, 686972),
 }
 TURN = {"m1697_westover"}   # sheets photographed on their side: panels turned 90 degrees clockwise so north is up
+CUT = {"m1697_westover": "m1698_dem"}   # survey: a neighbour's surface whose straight east and south edges it stops at
 SURFACES = {   # survey_id: [(dem, shift to the city datum), ...] first with data wins; else today's lidar
     "usgs_1896": [("nubbin_1896_dem", 0.0)],
     "huber_1902": [("combined_dem", 0.0)],
@@ -106,6 +107,32 @@ def sample(name, gx, gy, nodata=True):
         return z
     bad = cv2.remap((a < -9000).astype(np.float32), mx, my, cv2.INTER_LINEAR, borderValue=1)
     return np.where(bad < 1e-3, z, np.nan)
+
+
+def cut_mask(sid, gx, gy):
+    """True where a survey must not reach: west of its neighbour's straight east edge and north of its straight south
+    edge (Westover stops at the Blytheswood / Balch DLC lines). The edges are fitted to the neighbour's surface."""
+    if sid not in CUT:
+        return np.zeros(gx.shape, bool)
+    a = cv2.imread(str(T / f"{CUT[sid]}.tif"), cv2.IMREAD_UNCHANGED).astype(np.float32)
+    w = [float(v) for v in (T / f"{CUT[sid]}.tfw").read_text().split()]
+    ok = a > -9000
+    rows, cols = np.nonzero(ok)
+    E, N = w[4] + cols * w[0], w[5] + rows * w[3]
+    # east edge: the largest E on each row; south edge: the smallest N on each column (middle 80% of each, robust fit)
+    er = {}
+    for r, e in zip(rows, E):
+        er[r] = max(er.get(r, -1e18), e)
+    nc = {}
+    for c, n in zip(cols, N):
+        nc[c] = min(nc.get(c, 1e18), n)
+    rr = np.array(sorted(er)); ee = np.array([er[r] for r in rr]); nn_r = w[5] + rr * w[3]
+    k = slice(len(rr) // 10, len(rr) * 9 // 10)
+    ea, eb = np.polyfit(nn_r[k], ee[k], 1)                   # east edge: E = ea * N + eb
+    cc = np.array(sorted(nc)); ss = np.array([nc[c] for c in cc]); ee_c = w[4] + cc * w[0]
+    k = slice(len(cc) * 4 // 10, len(cc) * 9 // 10)          # the block's own south line (east part)
+    sa, sb = np.polyfit(ee_c[k], ss[k], 1)                   # south edge: N = sa * E + sb
+    return (gx < ea * gy + eb) & (gy > sa * gx + sb)
 
 
 def features(sid):
@@ -204,7 +231,7 @@ def card(sid, footprint):
     mk = np.zeros((PH, PW), np.uint8)
     ring = to_uv(np.asarray(footprint.exterior.coords) @ Ai[:, :2].T + Ai[:, 2])
     cv2.fillPoly(mk, [ring.round().astype(np.int32)], 1)
-    inside = np.isfinite(z) & (mk > 0)
+    inside = np.isfinite(z) & (mk > 0) & ~cut_mask(sid, gx, gy)
     zf = np.where(np.isfinite(z), z, np.nanmedian(z))
     cell = np.hypot(A[0, 0], A[1, 0]) / s                    # ft per panel pixel
     # shaded like the bare-earth lidar: grey hillshade lit from several directions (mostly the panel's upper left),
