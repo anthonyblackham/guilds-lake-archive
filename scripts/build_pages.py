@@ -11,6 +11,7 @@ import html
 import json
 from pathlib import Path
 
+from PIL import Image
 from pyogrio import list_layers
 from pyogrio.raw import read
 
@@ -62,6 +63,12 @@ th { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacin
 .card .meta { font: 13.5px/1.55 var(--sans); color: var(--muted); margin: 0 0 12px }
 .panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px }
 .panels figure { margin: 0 }
+.hero { margin: 4px 0 14px }
+.hero a { display: block }
+.hero img { display: block; width: 100%; height: auto; max-height: 80vh; object-fit: contain; margin: 0 auto;
+  background: var(--panel) }
+.hero.portrait img { width: auto; max-width: 100% }
+.hero figcaption { font: 12.5px/1.4 var(--sans); color: var(--muted); margin-top: 6px; text-align: center }
 .panels img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: var(--panel) }
 .overview { margin: 22px 0 0 }
 .overview img { display: block; width: 100%; height: auto; border: 1px solid var(--rule) }
@@ -70,6 +77,24 @@ th { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacin
 @media (max-width: 700px) { .panels { grid-template-columns: minmax(0, 1fr) } }
 """
 
+
+
+def hero(sid, title):
+    """The survey's relief render (scripts/figures/relief_make.py), when there is one: web JPEG on the card, the
+    lossless PNG behind it."""
+    jpg = HERE / "topography" / "renders" / f"{sid}-relief.jpg"
+    if not jpg.exists():
+        return ""
+    import sys
+    sys.path.insert(0, str(HERE / "scripts" / "figures"))
+    from relief_make import CAPTION
+    w, h = Image.open(jpg).size
+    png = jpg.with_suffix(".png")
+    full = f"renders/{png.name if png.exists() else jpg.name}"
+    cap = html.escape(CAPTION.get(sid, "The sheet in relief, raised from its traced contours."))
+    return (f'<figure class="hero{" portrait" if h > w else ""}"><a href="{full}"><img loading="lazy" '
+            f'src="renders/{jpg.name}" width="{w}" height="{h}" alt="{html.escape(title)}, rendered in relief"></a>'
+            f"<figcaption>{cap}</figcaption></figure>\n")
 
 def page(title, crumbs, header_html, body, depth):
     up = "../" * depth
@@ -151,7 +176,7 @@ def main():
 <p class="meta">{html.escape(sv['date'])} &middot; {html.escape(sv['surveyor'])} &middot; {html.escape(sv['interval'])}
 &middot; datum correction {'none' if corr == 0 else f'{corr:+.1f} ft'}<br>Placed: {html.escape(sv['position'])}; {html.escape(sv['fit'])}
 <br>Layers: {lays} &middot; <a href="../site/#{html.escape(sv['source_id'])}">the sheet in the catalogue</a></p>
-<div class="panels">
+{hero(sid, sv['title'])}<div class="panels">
 <figure><a href="cards/{sid}-original.jpg"><img loading="lazy" src="cards/{sid}-original.jpg" alt="The {html.escape(sv['title'])} as printed"></a><figcaption>The sheet</figcaption></figure>
 <figure><a href="cards/{sid}-contours.jpg"><img loading="lazy" src="cards/{sid}-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines, coloured by height</figcaption></figure>
 <figure><a href="cards/{sid}-model.jpg"><img loading="lazy" src="cards/{sid}-model.jpg" alt="Reconstructed ground, shaded relief coloured by height"></a><figcaption>The ground they describe</figcaption></figure>

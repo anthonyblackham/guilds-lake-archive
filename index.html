@@ -48,6 +48,12 @@ th { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacin
 .card .meta { font: 13.5px/1.55 var(--sans); color: var(--muted); margin: 0 0 12px }
 .panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px }
 .panels figure { margin: 0 }
+.hero { margin: 4px 0 14px }
+.hero a { display: block }
+.hero img { display: block; width: 100%; height: auto; max-height: 80vh; object-fit: contain; margin: 0 auto;
+  background: var(--panel) }
+.hero.portrait img { width: auto; max-width: 100% }
+.hero figcaption { font: 12.5px/1.4 var(--sans); color: var(--muted); margin-top: 6px; text-align: center }
 .panels img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: var(--panel) }
 .overview { margin: 22px 0 0 }
 .overview img { display: block; width: 100%; height: auto; border: 1px solid var(--rule) }

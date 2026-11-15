@@ -48,6 +48,12 @@ th { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacin
 .card .meta { font: 13.5px/1.55 var(--sans); color: var(--muted); margin: 0 0 12px }
 .panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px }
 .panels figure { margin: 0 }
+.hero { margin: 4px 0 14px }
+.hero a { display: block }
+.hero img { display: block; width: 100%; height: auto; max-height: 80vh; object-fit: contain; margin: 0 auto;
+  background: var(--panel) }
+.hero.portrait img { width: auto; max-width: 100% }
+.hero figcaption { font: 12.5px/1.4 var(--sans); color: var(--muted); margin-top: 6px; text-align: center }
 .panels img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: var(--panel) }
 .overview { margin: 22px 0 0 }
 .overview img { display: block; width: 100%; height: auto; border: 1px solid var(--rule) }
@@ -101,6 +107,7 @@ describe as shaded relief in the same colours. Click any panel for the full-size
 <p class="meta">August 1902 &middot; Huber &amp; Maxwell, Engineers &middot; 1 ft (labelled every 5); lake soundings
 &middot; datum correction none<br>Placed: +20 E, -10 N (fit to Olmsted plan 6 in their overlap); georeferenced in QGIS on street corners; shift fitted against plan 6 (mean |dz| 2.07 -&gt; 1.45 ft)
 <br>Layers: <code>huber_1902_contours</code>, <code>huber_1902_spot_heights</code> &middot; <a href="../site/#map-job02399-plan09-huber-maxwell-survey-blu">the sheet in the catalogue</a></p>
+<figure class="hero portrait"><a href="renders/huber_1902-relief.png"><img loading="lazy" src="renders/huber_1902-relief.jpg" width="3000" height="3620" alt="Map of Willamette Heights and Guild&#x27;s Lake (Huber &amp; Maxwell survey), rendered in relief"></a><figcaption>The sheet in relief: Guild&#x27;s Lake in 1902 at its 8 ft shore, the peninsula and the hill above Thurman Street raised from the traced contours (heights x5).</figcaption></figure>
 <div class="panels">
 <figure><a href="cards/huber_1902-original.jpg"><img loading="lazy" src="cards/huber_1902-original.jpg" alt="The Map of Willamette Heights and Guild&#x27;s Lake (Huber &amp; Maxwell survey) as printed"></a><figcaption>The sheet</figcaption></figure>
 <figure><a href="cards/huber_1902-contours.jpg"><img loading="lazy" src="cards/huber_1902-contours.jpg" alt="Traced contours coloured by height"></a><figcaption>Traced lines, coloured by height</figcaption></figure>
