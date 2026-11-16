@@ -24,7 +24,7 @@ Blackham)*. The scans the lines were traced from belong to their archives; see e
 | `m1698_1906_contours` | City Archives M/1698, Blythswood, 10 ft |
 | `m1697_westover_contours` | City Archives M/1697, Westover Terraces, 25 ft |
 | `job5174_1910_contours`, `job5174_1910_spot_heights` | Lewis-Wiley Co., Balch Gulch north of Thurman St, May 1910 |
-| `forestry_ext_c1910_spot_heights`, `forestry_ext_c1910_contours` | Parks Dept "Contours along Forestry Extension": pencilled creek marks, stadia shots, and a sample of Russell & Blyth's contours |
+| `forestry_ext_c1910_spot_heights`, `forestry_ext_c1910_contours` | Parks Dept "Contours along Forestry Extension": pencilled creek marks, stadia shots, and Russell & Blyth's contours |
 
 ## Fields (all feature layers)
 `survey_id`, `elev_printed`, `elev_city`, `kind`, `method`, `flag`, `source_id`, `note`.
@@ -44,9 +44,38 @@ Blackham)*. The scans the lines were traced from belong to their archives; see e
 - **M/1698 and M/1697:** both sheets read 3.4 ft above the city datum and are corrected by -3.4 ft.
 - **Job 5174:** five contours were extrapolated by the tracer to follow the original stream (flagged).
 - **Forestry extension:** the stadia shots carry their own benchmark and read about 15 ft high against the city
-  datum; `elev_city` = printed - 15. One Russell & Blyth 300 ft line reads ~15 ft below today's ground (flagged).
+  datum; `elev_city` = printed - 15. One short Russell & Blyth 300 ft piece reads ~12 ft below today's ground (flagged).
 - Positions are as good as each sheet's georeference: see `fit` in `surveys` (a few feet on the large-scale sheets,
   hundreds of feet on the USGS quadrangle).
 
 ## Rebuilding
 `python scripts/export_topography.py` regenerates the file from the project's working layers.
+
+# Historic hydrography
+
+`historic_hydrography.gpkg` holds the historic water of Guild's Lake and Balch Creek: Guild's Lake at three dates and its neighbours Kittredge and Doane lakes, the
+creek as drawn and as it runs today, and Lafe Pence's flumes and canal, each with its date and source. Same licence
+and credit (CC BY 4.0), same coordinate system (EPSG:2913) and height datum (City of Portland = NAVD88 - 2.10 ft).
+
+## Layers
+| Layer | What |
+|---|---|
+| `lakes` | Guild's Lake in **1852** (GLO meanders, M/1542, 229 ac), **Aug 1902** (Huber & Maxwell, 8 ft shore, 283 ac) and **1905** (fair time, ~13 ft, 306 ac; derived); **Kittredge Lake** (Port of Portland, Dec 1922) and **Doane Lake** (county survey G8/15, c. 1906-10) |
+| `streams` | Balch Creek as drawn **c. 1910** (Forestry Extension sheet) and **1896** (USGS), and **today** from the USGS National Hydrography Dataset, split into open channel and the piped section under the fill |
+| `sewers` | the Balch Gulch trunk sewer across the lake bed from the City of Portland's storm pipe records: the 1921 54 in monolithic concrete main (part still in service, part abandoned 2016) and the later pipes on its line (1972, 2016, undated), picked out along its path on the Port of Portland's 1924 reclamation map |
+| `water_works` | the Pence Company Canal and High Line Flume as **planned** (1906 map); the flumes, ditch, tunnel and intakes drawn on the Forestry Extension sheet (c. 1906-10, including a flume feeding Westover); and the 1907 spoil flumes from the Oregonian photograph (**built**) |
+
+## Fields (all layers)
+`name`, `kind` (lake, creek, sewer, flume, spoil flume, canal, ditch, tunnel), `status` (existing as drawn, built, planned,
+abandoned, open or piped today), `date` and `date_to` (text), `level_ft_city` (water level, where known), `method` (hand,
+derived, modern data), `source` (in words), `source_id` (catalogue id), `flag`, `note`.
+
+## Notes
+- **1905 lake** is derived: the 13 ft contour of the Huber & Maxwell 1902 ground, connected to the 1902 lake. The
+  level comes from the Oregon Daily Journal (8 Mar 1907: "eight feet of water during the exposition") and Olmsted's
+  planned El. 12. It is only as complete as Huber's traced contours.
+- **Pence canal and flume** are what the 1906 map shows, not what was built (about 26 miles built against 35 claimed).
+- **USGS 1896 creek:** position only; the sheet's contours along it read 40-90 ft low.
+
+## Rebuilding
+`python scripts/export_hydrography.py` regenerates the file from the project's working layers and the NHD extract.
