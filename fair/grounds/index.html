@@ -1,0 +1,396 @@
+<title>Lewis &amp; Clark Fair Grounds</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Libre+Franklin:wght@400;600&display=swap">
+<style>
+/* layout: the Official Ground Plan fills the sheet; a blueprint-label panel beside it holds the building's file or a
+   gallery (stacked on phones). Single dark blueprint look, same family as the 3D massing viewer. */
+:root {
+  --sheet: #1d3557;  --sheet-deep: #142640;  --chalk: #e8eef5;  --chalk-dim: #a9bdd3;
+  --pin: #ff6b3d;  --pin-quiet: #8fa6c0;  --rule: rgba(232, 238, 245, .26);  --tag: #f2c14e;
+  --cone: rgba(242, 193, 78, .55);  --cone-hi: #ffd76a;  --cone-dim: rgba(232, 238, 245, .18);
+  --f-label: "Courier Prime", "Courier New", ui-monospace, monospace;
+  --f-body: "Libre Franklin", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--sheet); color: var(--chalk); font: 15px/1.5 var(--f-body); overflow: hidden; }
+.app { height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) min(480px, 42vw); grid-template-rows: auto minmax(0, 1fr); }
+header { grid-column: 1 / -1; display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; border-bottom: 1px solid var(--rule);
+  padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { margin: 0; font: 700 1.05rem/1.2 var(--f-label); letter-spacing: .07em; text-transform: uppercase; }
+h1 a { color: inherit; text-decoration: none; }
+header p { margin: 0; color: var(--chalk-dim); font-size: .82rem; }
+.mapwrap { position: relative; min-width: 0; min-height: 0; }
+#map { position: absolute; inset: 0; overflow: auto; background: var(--sheet-deep); cursor: grab; }
+#map.drag { cursor: grabbing; }
+#sheet { position: relative; transform-origin: 0 0; }
+#sheet > img { display: block; width: 100%; height: auto; max-width: none; user-select: none; -webkit-user-drag: none; }
+#cones { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+#cones path, #cones circle { pointer-events: visiblePainted; cursor: pointer; fill: var(--cone); stroke: var(--sheet-deep); stroke-width: 1.5; }
+#cones .dim { fill: var(--cone-dim); stroke: none; }
+#cones .hi { fill: var(--cone-hi); stroke: #000; stroke-width: 2; }
+#cones .off { stroke-dasharray: 4 3; }
+.pin { position: absolute; z-index: 2; transform: translate(-50%, -50%); min-width: 22px; height: 22px; padding: 0 5px; border-radius: 11px;
+  font: 700 11px/22px var(--f-label); text-align: center; color: var(--sheet-deep); background: var(--pin-quiet); border: 1.5px solid var(--sheet-deep);
+  cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.4); }
+.pin.has { background: var(--pin); color: #fff; }
+.pin.sel { outline: 3px solid var(--chalk); outline-offset: 2px; z-index: 3; }
+.pin.ing { box-shadow: 0 0 0 3px var(--tag); }
+.pin:focus-visible { outline: 3px solid var(--tag); }
+.zoom { position: absolute; z-index: 4; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 6px; }
+button { font: .8rem var(--f-label); color: var(--chalk); background: var(--sheet-deep); border: 1px solid var(--rule); padding: 6px 10px; cursor: pointer; }
+button:hover { border-color: var(--chalk-dim); }
+button:focus-visible { outline: 2px solid var(--chalk); outline-offset: 2px; }
+button[aria-pressed="true"] { background: var(--tag); color: var(--sheet-deep); border-color: var(--tag); }
+aside { min-height: 0; overflow-y: auto; border-left: 1px solid var(--rule); background: var(--sheet-deep);
+  padding-block: 14px 28px; padding-left: 18px; padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+.lab { font: .72rem var(--f-label); letter-spacing: .09em; text-transform: uppercase; color: var(--chalk-dim); }
+h2 { margin: 2px 0 4px; font: 700 1.3rem/1.2 var(--f-label); text-wrap: balance; }
+h3 { margin: 22px 0 8px; font: 700 .82rem var(--f-label); letter-spacing: .09em; text-transform: uppercase; color: var(--chalk-dim);
+  border-top: 1px dashed var(--rule); padding-top: 12px; }
+.meta { color: var(--chalk-dim); font-size: .85rem; }
+.ev { font-size: .9rem; max-width: 62ch; }
+.lead { margin: 10px 0 6px; cursor: zoom-in; }
+.lead img { width: 100%; display: block; border: 1px solid var(--rule); min-height: 120px; background: var(--sheet); }
+.strip { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; }
+.strip figure { flex: 0 0 150px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+figure { margin: 0; cursor: zoom-in; min-width: 0; }
+figure img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; border: 1px solid var(--rule); background: var(--sheet); }
+figcaption { font-size: .74rem; line-height: 1.35; color: var(--chalk-dim); margin-top: 4px; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.lead figcaption { -webkit-line-clamp: unset; display: block; }
+figcaption b { color: var(--chalk); font-weight: 600; font-variant-numeric: tabular-nums; }
+.tag { font: .66rem var(--f-label); text-transform: uppercase; letter-spacing: .06em; color: var(--sheet-deep); background: var(--tag); padding: 0 4px; }
+.tag.q { background: var(--chalk-dim); }
+.plans { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+.plans figure img { aspect-ratio: auto; object-fit: contain; background: #d9d2bf; }
+#search { width: 100%; font: .9rem var(--f-body); color: var(--chalk); background: var(--sheet); border: 1px solid var(--rule); padding: 8px 10px; margin: 10px 0; }
+.list { list-style: none; margin: 0; padding: 0; }
+.list li { border-bottom: 1px solid var(--rule); }
+.list a { display: flex; justify-content: space-between; gap: 10px; padding: 7px 2px; color: var(--chalk); text-decoration: none; }
+.list a:hover, .list a:focus-visible { color: #fff; background: var(--sheet); outline: none; }
+.list .n { font: .78rem var(--f-label); color: var(--chalk-dim); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips a { font: .78rem var(--f-label); color: var(--chalk); text-decoration: none; border: 1px solid var(--rule); padding: 3px 8px; }
+.chips a:hover, .chips a:focus-visible { border-color: var(--chalk); outline: none; }
+.chips a span { color: var(--chalk-dim); margin-left: 4px; }
+.back { display: inline-block; margin-bottom: 8px; color: var(--chalk-dim); font: .78rem var(--f-label); text-decoration: none; }
+.back:hover { color: var(--chalk); }
+.golink { color: var(--chalk); font: .82rem var(--f-label); }
+.key { display: flex; gap: 14px; flex-wrap: wrap; font-size: .8rem; color: var(--chalk-dim); }
+.dot { display: inline-block; width: 11px; height: 11px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+#lb { position: fixed; inset: 0; z-index: 20; background: rgba(8, 18, 34, .95); display: grid; grid-template-rows: minmax(0, 1fr) auto;
+  padding-top: calc(10px + env(safe-area-inset-top, 0px)); padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+#lb[hidden], [hidden] { display: none !important; }
+#pl { position: fixed; inset: 0; z-index: 15; background: var(--sheet-deep); display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+  padding-top: calc(8px + env(safe-area-inset-top, 0px)); padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); gap: 8px; }
+.plbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: .9rem; }
+.plscroll { overflow: auto; min-height: 0; border: 1px solid var(--rule); background: #d9d2bf; }
+.plsheet { position: relative; width: max(100%, 1100px); }
+.plsheet img { display: block; width: 100%; max-width: none; height: auto; }
+.fdot { position: absolute; transform: translate(-50%, -50%); width: 26px; height: 26px; border-radius: 50%; padding: 0;
+  font: 700 12px/24px var(--f-label); color: #fff; background: var(--pin); border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.5); }
+.fdot.maybe { background: #b0682f; border-style: dashed; }
+.fdot.sel { outline: 3px solid var(--sheet-deep); outline-offset: 1px; }
+.plinfo { max-height: 34vh; overflow-y: auto; font-size: .9rem; min-height: 2.5em; }
+.plinfo .strip figure { flex-basis: 140px; }
+#lb img { max-width: 100%; max-height: 100%; margin: auto; display: block; object-fit: contain; }
+#lb .bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding-top: 10px; max-width: 1100px; margin: 0 auto; width: 100%; }
+#lb .txt { flex: 1 1 300px; min-width: 0; font-size: .88rem; }
+#lb .txt .meta { font-size: .8rem; }
+#lb .txt a { color: var(--chalk); }
+#lb .count { font: .78rem var(--f-label); color: var(--chalk-dim); }
+@media (max-width: 760px) {
+  body { overflow: auto; }
+  .app { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 58vh auto; height: auto; }
+  aside { border-left: 0; border-top: 1px solid var(--rule); overflow: visible; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+}
+@media (prefers-reduced-motion: no-preference) { #map { scroll-behavior: smooth; } }
+</style>
+
+<div class="app">
+  <header>
+    <a id="up" class="back" href="../" hidden style="margin:0">&larr; The 1905 Exposition</a>
+    <h1><a href="#">Lewis &amp; Clark Fair, 1905</a></h1>
+    <p>Official Ground Plan, Portland. Pick a building, or a gallery, to see its photographs; turn on camera spots to see where each was taken.</p>
+  </header>
+  <div class="mapwrap">
+    <div id="map" aria-label="Official Ground Plan of the exposition">
+      <div id="sheet"><img id="plan" alt="Official Ground Plan of the Lewis and Clark Centennial Exposition, 1905 (Union Printing Co.)"><svg id="cones" aria-hidden="true"></svg></div>
+    </div>
+    <div class="zoom">
+      <button type="button" id="cam" aria-pressed="false" title="Show where photographs were taken">Camera spots</button>
+      <button type="button" id="zin" aria-label="Zoom in">+</button>
+      <button type="button" id="zout" aria-label="Zoom out">&minus;</button>
+      <button type="button" id="zfit">Fit</button>
+    </div>
+  </div>
+  <aside id="panel" aria-live="polite"></aside>
+</div>
+
+<div id="pl" hidden role="dialog" aria-modal="true" aria-label="Floor plan">
+  <div class="plbar"><div id="pltitle"></div><button type="button" id="plclose">Close</button></div>
+  <div class="plscroll"><div class="plsheet"><img id="plimg" alt=""><div id="pldots"></div></div></div>
+  <div id="plinfo" class="plinfo"></div>
+</div>
+
+<div id="lb" hidden role="dialog" aria-modal="true" aria-label="Photograph">
+  <img id="lbimg" alt="">
+  <div class="bar">
+    <button type="button" id="lbprev" aria-label="Previous photo">&larr;</button>
+    <div class="txt" id="lbtxt"></div>
+    <button type="button" id="lbnext" aria-label="Next photo">&rarr;</button>
+    <button type="button" id="lbclose">Close</button>
+  </div>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let D, zoom = 1, fit = 1, lbList = [], lbAt = 0, focusIds = null, showCones = false;
+const map = $("#map"), sheet = $("#sheet"), panel = $("#panel"), cones = $("#cones");
+const LEAD_HOW = { printed: "1905 printed view", pick: "your pick", star: "your starred photo", auto: "chosen automatically: first sure exterior" };
+
+/* ---- images: each photo is a slice of a pack file (an artifact holds few files, so ~900 photos ship in ~45 packs) ---- */
+const packs = {}, urls = {};
+const pack = (k, n) => packs[k + n] ??= fetch("packs/" + D.packs[k][n]).then(r => { if (!r.ok) throw Error(r.status); return r.blob(); });
+function imgUrl(id, k) {
+  if (D.photos[id].url) return Promise.resolve(D.photos[id].url);   // public site: the archive's own thumbnail
+  const key = id + k; if (urls[key]) return Promise.resolve(urls[key]);
+  const [n, o, l] = D.photos[id][k];
+  return pack(k, n).then(b => urls[key] = URL.createObjectURL(b.slice(o, o + l, "image/jpeg")));
+}
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); load(e.target); } }), { rootMargin: "300px" });
+function load(im) { imgUrl(im.dataset.pid, im.dataset.k || "t").then(u => im.src = u).catch(() => { im.alt += " (could not load)"; }); }
+function hydrate(root) { root.querySelectorAll("img[data-pid]").forEach(im => io.observe(im)); }
+
+fetch("data.json", { cache: "no-cache" }).then(r => r.json()).then(d => {
+  D = d; D.byKey = Object.fromEntries(D.buildings.map(b => [b.key, b])); D.byGal = Object.fromEntries(D.galleries.map(g => [g.key, g]));
+  $("#plan").src = D.plan.file; $("#up").hidden = !D.public;
+  cones.setAttribute("viewBox", `0 0 ${D.plan.w} ${D.plan.h}`); cones.setAttribute("preserveAspectRatio", "none");
+  for (const b of D.buildings) {
+    const p = document.createElement("button");
+    p.type = "button"; p.className = "pin" + (b.photos.length ? " has" : ""); p.textContent = b.gp || "•";
+    p.style.left = b.x + "%"; p.style.top = b.y + "%"; p.dataset.key = b.key;
+    p.title = b.name + (b.photos.length ? ` (${b.photos.length} photos)` : "");
+    p.setAttribute("aria-label", p.title);
+    p.addEventListener("click", e => { e.stopPropagation(); location.hash = "b-" + b.key; });
+    sheet.append(p);
+  }
+  drawCones(); fitMap(); route();
+}).catch(e => { panel.innerHTML = `<p>The data could not be loaded (${esc(e.message)}).</p>`; });
+
+/* ---- map ---- */
+function setZoom(z, cx, cy) {
+  const r = map.getBoundingClientRect();
+  cx ??= r.width / 2; cy ??= r.height / 2;
+  const fx = (map.scrollLeft + cx) / sheet.offsetWidth, fy = (map.scrollTop + cy) / sheet.offsetHeight;
+  zoom = Math.max(fit, Math.min(z, fit * 6));
+  sheet.style.width = D.plan.w * zoom + "px";
+  map.style.scrollBehavior = "auto";
+  map.scrollLeft = fx * sheet.offsetWidth - cx; map.scrollTop = fy * sheet.offsetHeight - cy;
+  map.style.scrollBehavior = "";
+}
+function fitMap() { const r = map.getBoundingClientRect(); fit = Math.min(r.width / D.plan.w, r.height / D.plan.h); setZoom(fit * 1.15); }
+$("#zin").onclick = () => setZoom(zoom * 1.5);
+$("#zout").onclick = () => setZoom(zoom / 1.5);
+$("#zfit").onclick = () => setZoom(fit);
+addEventListener("resize", () => { if (D) { const z = zoom / fit; fitMap(); setZoom(fit * z); } });
+map.addEventListener("wheel", e => { if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); const r = map.getBoundingClientRect(); setZoom(zoom * (e.deltaY < 0 ? 1.2 : 1 / 1.2), e.clientX - r.left, e.clientY - r.top); }, { passive: false });
+map.addEventListener("dblclick", e => { if (e.target.closest(".pin, path, circle")) return; const r = map.getBoundingClientRect(); setZoom(zoom * 1.6, e.clientX - r.left, e.clientY - r.top); });
+let drag = null;
+map.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse" || e.target.closest(".pin, path, circle")) return; drag = [e.clientX, e.clientY, map.scrollLeft, map.scrollTop]; map.classList.add("drag"); });
+addEventListener("pointermove", e => { if (!drag) return; map.style.scrollBehavior = "auto"; map.scrollLeft = drag[2] - (e.clientX - drag[0]); map.scrollTop = drag[3] - (e.clientY - drag[1]); });
+addEventListener("pointerup", () => { drag = null; map.classList.remove("drag"); map.style.scrollBehavior = ""; });
+
+/* ---- camera spots: a wedge pointing the way the camera looked; a dot where no bearing was set ---- */
+function drawCones() {
+  cones.innerHTML = "";
+  if (!showCones) return;
+  const W = D.plan.w, H = D.plan.h, R = 64, half = 22 * Math.PI / 180;
+  const pts = Object.values(D.photos).filter(p => p.cam);
+  const on = focusIds ? new Set(focusIds) : null;
+  pts.sort((a, b) => (on ? on.has(a.id) - on.has(b.id) : 0));
+  for (const p of pts) {
+    const x = p.cam.x / 100 * W, y = p.cam.y / 100 * H;
+    let el;
+    if (p.cam.a == null) {
+      el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      el.setAttribute("cx", x); el.setAttribute("cy", y); el.setAttribute("r", 9);
+    } else {
+      const a = p.cam.a * Math.PI / 180, pt = t => [x + R * Math.sin(t), y - R * Math.cos(t)];
+      const [x1, y1] = pt(a - half), [x2, y2] = pt(a + half);
+      el = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      el.setAttribute("d", `M${x},${y}L${x1},${y1}A${R},${R} 0 0 1 ${x2},${y2}Z`);
+    }
+    el.setAttribute("class", (on ? (on.has(p.id) ? "hi" : "dim") : "") + (p.cam.off ? " off" : ""));
+    const t = document.createElementNS("http://www.w3.org/2000/svg", "title");
+    t.textContent = (p.date ? p.date + " · " : "") + p.cap + (p.cam.off ? " (taken off the edge of the plan)" : "");
+    el.append(t);
+    el.addEventListener("click", e => { e.stopPropagation(); const list = on && on.has(p.id) ? focusIds.filter(i => D.photos[i].cam) : [p.id]; openLb(list, p.id); });
+    cones.append(el);
+  }
+}
+$("#cam").onclick = () => { showCones = !showCones; $("#cam").setAttribute("aria-pressed", showCones); drawCones(); };
+
+/* ---- routing: #b-<key> a building, #g-<key> a gallery, else the index ---- */
+function route() {
+  document.querySelectorAll(".pin.sel, .pin.ing").forEach(p => p.classList.remove("sel", "ing"));
+  const m = location.hash.match(/^#([bg])-(.+)$/);
+  const b = m && m[1] === "b" && D.byKey[decodeURIComponent(m[2])];
+  const g = m && m[1] === "g" && D.byGal[decodeURIComponent(m[2])];
+  if (b) {
+    focusIds = b.photos;
+    document.querySelector(`.pin[data-key="${CSS.escape(b.key)}"]`)?.classList.add("sel");
+    const r = map.getBoundingClientRect();
+    map.scrollTo({ left: b.x / 100 * sheet.offsetWidth - r.width / 2, top: b.y / 100 * sheet.offsetHeight - r.height / 2 });
+    building(b);
+  } else if (g) {
+    focusIds = g.ids;
+    const keys = new Set(g.ids.flatMap(i => D.photos[i].keys));
+    document.querySelectorAll(".pin").forEach(p => { if (keys.has(p.dataset.key)) p.classList.add("ing"); });
+    gallery(g);
+  } else { focusIds = null; home(); }
+  drawCones(); panel.scrollTop = 0; if (innerWidth <= 760 && (b || g)) panel.scrollIntoView({ block: "start" });
+}
+addEventListener("hashchange", () => D && route());
+
+function home() {
+  const withP = D.buildings.filter(b => b.photos.length).length, n = Object.values(D.photos).filter(p => !p.printed).length;
+  const ncam = Object.values(D.photos).filter(p => p.cam).length;
+  const kinds = ["Theme", "View", "Place", "Other"];
+  panel.innerHTML = `
+    <div class="lab">The grounds</div>
+    <h2>${n} photographs, ${D.buildings.length} places</h2>
+    <p class="meta">${withP} places have photographs. Every picture in the Guild's Lake Archive catalogue that shows the fair is here, tagged by building, kind of view and theme; ${ncam} have the spot the camera stood. The main buildings lead with their 1905 printed views${D.public ? "" : "; pictures that need an archive's permission to publish are included on this private copy"}.</p>
+    <div class="key"><span><i class="dot" style="background:var(--pin)"></i>Has photographs</span><span><i class="dot" style="background:var(--pin-quiet)"></i>None yet</span><span><i class="dot" style="background:var(--cone-hi)"></i>Camera spot</span></div>
+    <h3>Galleries</h3>
+    ${kinds.map(k => { const gs = D.galleries.filter(g => g.kind === k); return gs.length ? `<div class="lab" style="margin:10px 0 6px">${k === "Other" ? "Other" : k + "s"}</div><div class="chips">${gs.map(g => `<a href="#g-${esc(g.key)}">${esc(g.title)}<span>${g.ids.length}</span></a>`).join("")}</div>` : ""; }).join("")}
+    <h3>Buildings</h3>
+    <label class="lab" for="search" style="display:block">Find a building</label>
+    <input id="search" type="search" placeholder="Name or ground plan number" autocomplete="off">
+    <ul class="list" id="list"></ul>`;
+  const draw = q => {
+    q = q.trim().toLowerCase();
+    $("#list").innerHTML = D.buildings.filter(b => !q || b.name.toLowerCase().includes(q) || b.gp === q || (b.other || "").toLowerCase().includes(q))
+      .map(b => `<li><a href="#b-${esc(b.key)}"><span>${b.gp ? esc(b.gp) + " &middot; " : ""}${esc(b.name)}</span><span class="n">${b.photos.length ? b.photos.length + " photos" : "no photos"}</span></a></li>`).join("");
+  };
+  $("#search").addEventListener("input", e => draw(e.target.value)); draw("");
+}
+
+function fig(id, list) {
+  const p = D.photos[id]; if (!p) return "";
+  const t = p.conf && p.conf !== "sure" ? ` <span class="tag">${esc(p.conf)}</span>` : "";
+  return `<figure data-id="${esc(id)}" data-list="${esc(list)}" tabindex="0"><img data-pid="${esc(id)}" alt="${esc(p.cap)}">
+    <figcaption>${p.date ? `<b>${esc(p.date)}</b> ` : ""}${esc(p.cap)}${t}</figcaption></figure>`;
+}
+function wire(lists) {
+  window._lists = lists;
+  panel.querySelectorAll("figure[data-id]").forEach(f => { const go = () => openLb(lists[f.dataset.list], f.dataset.id); f.onclick = e => { if (e.target.tagName !== "A") go(); }; f.onkeydown = e => { if (e.key === "Enter") go(); }; });
+  hydrate(panel);
+}
+
+function building(b) {
+  const bgs = new Set(b.bg || []);
+  const ph = b.photos.map(i => D.photos[i]).filter(p => p && p.id !== b.best && !bgs.has(p.id));
+  const by = v => ph.filter(p => v.includes(p.view));
+  const sec = [
+    ["cons", "Under construction", by(["construction"]), "strip"],
+    ["ext", "Exterior", by(["exterior", "aerial"]), "grid"],
+    ["evt", "Events and people", by(["event/people"]), "grid"],
+    ["night", "At night", by(["night"]), "grid"],
+    ["exh", "Exhibits and interiors", by(["interior/exhibit"]), "grid"],
+    ["view", "In wider views", by(["view"]), "grid"],
+    ["rest", "More photographs", by([""]), "grid"],
+    ["bg", "Also in view (another building is the subject)", [...bgs].filter(i => i !== b.best).map(i => D.photos[i]), "grid"],
+  ];
+  const lists = Object.fromEntries(sec.map(([k, , ps]) => [k, ps.map(p => p.id)]));
+  lists.lead = b.best ? [b.best] : [];
+  const lead = b.best && D.photos[b.best];
+  const ncam = b.photos.filter(i => D.photos[i]?.cam).length;
+  panel.innerHTML = `
+    <a class="back" href="#">&larr; All buildings and galleries</a>
+    <div class="lab">${b.gp ? "Ground plan no. " + esc(b.gp) : "Not numbered on the plan"}${b.section ? " &middot; " + esc(b.section) : ""}</div>
+    <h2>${esc(b.name)}</h2>
+    ${b.other ? `<p class="meta">Also called: ${esc(b.other)}</p>` : ""}
+    ${lead ? `<figure class="lead" data-id="${esc(lead.id)}" data-list="lead" tabindex="0"><img data-pid="${esc(lead.id)}" data-k="f" alt="${esc(lead.cap)}"><figcaption>${lead.date ? `<b>${esc(lead.date)}</b> ` : ""}${esc(lead.cap)} &middot; ${esc(lead.call)} <span class="tag q">${esc(LEAD_HOW[b.lead] || "")}</span></figcaption></figure>` : `<p class="meta">No photographs linked yet.</p>`}
+    ${b.heights ? `<p class="meta"><b>Height:</b> ${esc(b.heights)}</p>` : ""}
+    ${ncam ? `<p class="meta">${ncam} of these photographs have a camera spot. <a class="golink" href="#" id="showcam">${showCones ? "They are lit on the plan." : "Show them on the plan"}</a></p>` : ""}
+    ${b.in3d && !D.public ? `<p><a class="golink" href="https://claude.ai/artifact/UTeYLca3JsNEHh6tPVXsz6#b-${esc(b.key)}" target="_blank" rel="noopener">See in the 3D model &rarr;</a></p>` : ""}
+    ${b.evidence ? `<p class="ev">${esc(b.evidence)}</p>` : ""}
+    ${b.plans.length ? `<h3>Floor plan</h3><div class="plans">${b.plans.map((p, i) => `<figure data-plan="${i}" tabindex="0"><img loading="lazy" src="${esc(p.file)}" alt="${esc(p.label)}"><figcaption><b>${esc(p.label)}</b>${(p.dots || []).length ? ` &middot; ${p.dots.length} booths with photos` : ""}. Official Catalogue (1905); numbers are exhibit entries. <a href="${esc(p.src)}" target="_blank" rel="noopener" style="color:var(--chalk-dim)">archive.org page</a></figcaption></figure>`).join("")}</div>` : ""}
+    ${sec.map(([k, title, ps, cls]) => ps.length ? `<h3>${title} (${ps.length})</h3><div class="${cls}">${ps.map(p => fig(p.id, k)).join("")}</div>` : "").join("")}`;
+  wire(lists);
+  $("#showcam")?.addEventListener("click", e => { e.preventDefault(); if (!showCones) $("#cam").click(); building(b); });
+  panel.querySelectorAll("figure[data-plan]").forEach(f => { const go = () => openPlan(b.plans[+f.dataset.plan], b); f.onclick = e => { if (e.target.tagName !== "A") go(); }; f.onkeydown = e => { if (e.key === "Enter") go(); }; });
+}
+
+function gallery(g) {
+  const ids = g.ids, years = {};
+  ids.forEach(i => { const y = (D.photos[i].dk || "9999").slice(0, 4); (years[y] ??= []).push(i); });
+  const ncam = ids.filter(i => D.photos[i].cam).length;
+  const nb = new Set(ids.flatMap(i => D.photos[i].keys)).size;
+  panel.innerHTML = `
+    <a class="back" href="#">&larr; All buildings and galleries</a>
+    <div class="lab">${esc(g.kind)} gallery</div>
+    <h2>${esc(g.title)}</h2>
+    <p class="meta">${ids.length} photographs${nb ? `, ${nb} buildings (ringed on the plan)` : ""}${ncam ? `, ${ncam} with camera spots${showCones ? " (lit on the plan)" : ""}` : ""}. In date order.</p>
+    ${Object.entries(years).map(([y, list]) => `<h3>${y === "9999" ? "Undated" : y} (${list.length})</h3><div class="grid">${list.map(i => fig(i, "all")).join("")}</div>`).join("")}`;
+  wire({ all: ids });
+}
+
+/* ---- viewer ---- */
+function openLb(list, id) { lbList = list; lbAt = Math.max(0, list.indexOf(id)); showLb(); $("#lb").hidden = false; $("#lbclose").focus(); }
+function openPlan(p, b) {
+  const dots = p.dots || [];
+  $("#plimg").src = p.file; $("#plimg").alt = p.label;
+  $("#pltitle").innerHTML = `<b>${esc(b.name)}</b> &middot; ${esc(p.label)} &middot; Official Catalogue, 1905`;
+  $("#plinfo").innerHTML = dots.length ? `${dots.length} booth${dots.length > 1 ? "s" : ""} with photographs. Pick a dot.` : "No booth photographs placed on this plan yet.";
+  const box = $("#pldots"); box.innerHTML = "";
+  dots.forEach(d => {
+    const el = document.createElement("button"); el.type = "button"; el.className = "fdot" + (d.conf === "sure" ? "" : " maybe");
+    el.style.left = d.x + "%"; el.style.top = d.y + "%"; el.textContent = d.photos.length;
+    el.title = `${d.entry} ${d.who}`; el.setAttribute("aria-label", `${d.entry}, ${d.who}, ${d.photos.length} photos`);
+    el.onclick = () => {
+      box.querySelectorAll(".fdot.sel").forEach(x => x.classList.remove("sel")); el.classList.add("sel");
+      $("#plinfo").innerHTML = `<div><b>No. ${esc(d.entry)}</b> &middot; ${esc(d.who)}${d.conf !== "sure" ? ` <span class="tag">${esc(d.conf)}</span>` : ""}</div>
+        ${d.note ? `<div class="meta">${esc(d.note)}</div>` : ""}<div class="strip" style="margin-top:8px">${d.photos.map(i => fig(i, "dot")).join("")}</div>`;
+      $("#plinfo").querySelectorAll("figure[data-id]").forEach(f => { const go = () => openLb(d.photos, f.dataset.id); f.onclick = go; f.onkeydown = e => { if (e.key === "Enter") go(); }; });
+      hydrate($("#plinfo"));
+    };
+    box.append(el);
+  });
+  $("#pl").hidden = false; $("#plclose").focus();
+}
+$("#plclose").onclick = () => { $("#pl").hidden = true; };
+addEventListener("keydown", e => { if (e.key === "Escape" && !$("#pl").hidden && $("#lb").hidden) $("#pl").hidden = true; });
+function showLb() {
+  const id = lbList[lbAt], p = D.photos[id], img = $("#lbimg");
+  img.removeAttribute("src"); img.alt = p.cap;
+  imgUrl(id, "t").then(u => { if (lbList[lbAt] === id && !img.dataset.full) img.src = u; });
+  img.dataset.full = "";
+  imgUrl(id, "f").then(u => { if (lbList[lbAt] === id) { img.src = u; img.dataset.full = "1"; } }).catch(() => {});
+  const bl = p.keys.map(k => D.byKey[k]).filter(Boolean);
+  const bits = [p.call, p.credit && !p.call.includes(p.credit) ? p.credit : "", p.vl, p.conf && p.conf !== "sure" ? "link " + p.conf : "", p.note].filter(Boolean);
+  $("#lbtxt").innerHTML = `<div>${p.date ? `<b>${esc(p.date)}</b> &middot; ` : ""}${esc(p.cap)}</div>
+    <div class="meta">${bits.map(esc).join(" &middot; ")}${p.ex.length ? "<br>Exhibits: " + p.ex.map(esc).join("; ") : ""}</div>
+    <div class="meta">${bl.map(b => `<a href="#b-${esc(b.key)}" data-close>${esc(b.name)}</a>`).join(", ")}${p.themes.length ? (bl.length ? " &middot; " : "") + p.themes.map(esc).join(", ") : ""}${p.src ? ` &middot; <a href="${esc(p.src)}" target="_blank" rel="noopener">At the holding archive</a>` : ""}${p.cam ? " &middot; camera spot on the plan" : ""}</div>
+    ${lbList.length > 1 ? `<div class="count">${lbAt + 1} of ${lbList.length}</div>` : ""}`;
+  $("#lbtxt").querySelectorAll("[data-close]").forEach(a => a.onclick = () => { $("#lb").hidden = true; });
+  $("#lbprev").hidden = $("#lbnext").hidden = lbList.length < 2;
+}
+$("#lbprev").onclick = () => { lbAt = (lbAt - 1 + lbList.length) % lbList.length; showLb(); };
+$("#lbnext").onclick = () => { lbAt = (lbAt + 1) % lbList.length; showLb(); };
+$("#lbclose").onclick = () => { $("#lb").hidden = true; };
+$("#lb").addEventListener("click", e => { if (e.target.id === "lb") $("#lb").hidden = true; });
+addEventListener("keydown", e => {
+  if ($("#lb").hidden) return;
+  if (e.key === "Escape") $("#lb").hidden = true;
+  else if (e.key === "ArrowRight" && lbList.length > 1) $("#lbnext").click();
+  else if (e.key === "ArrowLeft" && lbList.length > 1) $("#lbprev").click();
+});
+</script>

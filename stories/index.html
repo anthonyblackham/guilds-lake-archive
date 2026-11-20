@@ -60,6 +60,32 @@ th { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacin
 .overview figcaption { font: 13px/1.5 var(--sans); color: var(--muted); margin-top: 6px }
 .panels figcaption { font: 12.5px/1.4 var(--sans); color: var(--muted); margin-top: 5px }
 @media (max-width: 700px) { .panels { grid-template-columns: minmax(0, 1fr) } }
+.swipe { position: relative; width: 100%; max-width: 100%; aspect-ratio: 1600 / 1635; margin: 0 auto;
+  overflow: hidden; touch-action: pan-y; user-select: none; cursor: ew-resize; border: 1px solid var(--rule); border-radius: 4px;
+  background: var(--panel) }
+.swipe img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none }
+.swipe .then { clip-path: inset(0 calc(100% - var(--pos, 50%)) 0 0) }
+.swipe .handle { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 0; pointer-events: none }
+.swipe .handle::before { content: ""; position: absolute; top: 0; bottom: 0; left: -1.5px; width: 3px; background: #fffaf0;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.35) }
+.swipe .knob { position: absolute; top: 50%; left: 0; width: 46px; height: 46px; transform: translate(-50%, -50%);
+  border-radius: 50%; background: #fffaf0; box-shadow: 0 2px 8px rgba(0,0,0,.35); display: grid; place-items: center;
+  color: #2a241c; font: 600 16px var(--sans) }
+.swipe .tag { position: absolute; top: 12px; padding: 6px 10px; font: 600 13px/1 var(--sans); letter-spacing: .08em;
+  background: rgba(20,16,12,.72); color: #fffaf0; border-radius: 3px; pointer-events: none }
+.swipe .tag.l { left: 12px }
+.swipe .tag.r { right: 12px }
+.swipe input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; margin: 0; cursor: ew-resize }
+.swipe input:focus-visible ~ .handle .knob { outline: 3px solid var(--accent); outline-offset: 3px }
+.key { display: flex; flex-wrap: wrap; gap: 8px 20px; list-style: none; padding: 0; margin: 12px 0 0;
+  font: 13.5px/1.4 var(--sans); color: var(--muted) }
+.key li { display: flex; align-items: center; gap: 8px }
+.key .sw { width: 16px; height: 12px; border: 1px solid rgba(0,0,0,.35); display: inline-block }
+.timeline { margin: 8px 0 0; padding: 0; list-style: none; border-left: 2px solid var(--rule) }
+.timeline li { position: relative; padding: 2px 0 18px 22px; font: 15.5px/1.55 var(--sans) }
+.timeline li::before { content: ""; position: absolute; left: -7px; top: 8px; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--bg); border: 2px solid var(--accent) }
+.timeline .yr { display: block; font: 600 13px var(--sans); letter-spacing: .06em; color: var(--badge) }
 </style></head>
 <body><div class="wrap">
 <nav class="top"><a href="../">Guild&#x27;s Lake Archive</a> <span class="here">Stories</span></nav>
